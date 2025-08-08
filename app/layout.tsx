@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Playwrite_AU_QLD,
+  Almendra,
+  Inter,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -9,6 +15,23 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const playwrite = Playwrite_AU_QLD({
+  variable: "--font-playwrite-au",
+  weight: ["100", "200", "300", "400"],
+});
+
+const almendra = Almendra({
+  variable: "--font-almendra",
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
 
@@ -25,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${almendra.variable} ${playwrite.variable} antialiased`}
       >
         {children}
       </body>

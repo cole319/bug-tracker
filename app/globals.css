@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  padding: 0;
+  margin: 0;
 }
 
 @theme inline {
@@ -10,6 +12,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* custom font */
+  --font-primary: var(--font-inter);
+  --font-logo-primary: var(--font-almendra);
+  --font-logo-secondary: var(--font-playwrite-au);
+
+  /* custom color palette */
+
+  --color-bg-base: oklch(98.5% 0.002 247.839);
+  --color-card-bg: oklch(98.5% 0 0);
+  --color-card-border: oklch(1 0 0 / 30%);
+  --color-card-shadow: 0 4px 30px oklch(0 0 0 / 10%);
+  --color-text-primary: oklch(0.3506 0.0066 248.02);
+  --color-text-secondary: oklch(0.4024 0.027 279.51);
+  --color-accent-primary: oklch(0.3016 0.0268 266.68);
+  --color-accent-red: oklch(0.6375 0.2489 20.73);
+  --color-accent-green: oklch(0.7266 0.208471 148.3381);
+  --color-accent-yellow: oklch(0.8034 0.1704 73.79);
+  --color-accent-logo: oklch(68.5% 0.169 237.323);
+
+  --color-bg-base-d: oklch(0.3016 0.0268 266.68);
+  --color-card-bg-d: oklch(0.2796 0.0314 267.3);
+  --color-accent-primary-d: oklch(98.5% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +48,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
 }
