@@ -19,8 +19,8 @@
   /* custom color palette */
 
   /* light mode */
-  --color-bg-base: oklch(98.5% 0.002 247.839);
-  --color-card-bg: oklch(98.5% 0 0);
+  --color-bg-base: oklch(0.9862 0.0068 247.89);
+  --color-card-bg: oklch(99.9% 0 0);
   --color-card-border: oklch(1 0 0 / 30%);
   --color-card-shadow: 0 4px 30px oklch(0 0 0 / 10%);
 

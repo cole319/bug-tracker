@@ -1,21 +1,10 @@
-// themeSlice.ts
-
 "use client";
 import { createSlice } from "@reduxjs/toolkit";
-
-function getCurrentTheme() {
-  try {
-    const savedTheme = localStorage.getItem("theme");
-    return savedTheme ? savedTheme : "light";
-  } catch {
-    return "light";
-  }
-}
 
 const themeSlice = createSlice({
   name: "theme",
   initialState: {
-    mode: getCurrentTheme(),
+    mode: "light", // Default value only
   },
   reducers: {
     setTheme: (state, action) => {
