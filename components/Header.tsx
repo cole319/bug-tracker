@@ -12,7 +12,7 @@ export default function Header() {
   const dispatch = useAppDispatch();
 
   return (
-    <section className="py-[1rem] md:pt-[3rem] md:pb-[1rem] px-[1rem] sm:px-[2rem] md:px-[4rem] flex justify-between items-center bg-bg-base dark:bg-d-bg-base">
+    <section className="w-full py-[1rem] md:pt-[3rem] md:pb-[1rem] px-[1rem] md:px-[2rem] lg:px-[4rem] flex justify-between items-center bg-bg-base dark:bg-d-bg-base">
       <h1 className="font-logo-primary text-[2rem] font-[900] text-text-secondary flex items-center dark:text-d-text-secondary">
         <span className="font-logo-primary text-[4rem] font-[900] text-accent-logo dark:text-d-accent-logo">
           X

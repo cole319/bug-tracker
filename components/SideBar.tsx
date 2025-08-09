@@ -31,7 +31,7 @@ const menuItems = [
 export default function SideBar() {
   const [active, setActive] = useState<Boolean>(false);
   return (
-    <section className="bg-card-bg dark:bg-d-card-bg p-[1rem] shadow-accent-primary/40 dark:border-[0.2px] shadow-2xl rounded-lg w-[23rem] h-fit">
+    <section className="hidden lg:block bg-card-bg dark:bg-d-card-bg p-[1rem] shadow-accent-primary/40 dark:border-[0.2px] shadow-2xl rounded-lg w-[23rem] h-fit">
       <div className="flex flex-col justify center items-start pt-[1rem] pb-[1.5rem] gap-[0.5rem]">
         {menuItems.map((menuItem) => (
           <button
