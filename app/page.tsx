@@ -1,16 +1,32 @@
-// page.tsx
+// app/page.tsx
 "use client";
 
-import Header from "@/components/Header";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/store";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import SideBar from "@/components/SideBar";
 import DashBoard from "@/components/DashBoard";
 import AddButton from "@/components/AddButton";
 import BottomMenu from "@/components/BottomMenu";
 
 export default function Home() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const router = useRouter();
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      router.push("/login"); // Adjust to your actual login route
+    }
+  }, [user, router]);
+
+  // Optional: show nothing until we know if user is logged in
+  if (!user) return null;
+
   return (
     <div className="relative bg-bg-base dark:bg-d-bg-base min-h-screen text-text-primary font-primary w-full">
-      <Header />
       <div className="relative px-[1rem] lg:px-[4rem] flex justify-between gap-[2rem]">
         <SideBar />
         <DashBoard />

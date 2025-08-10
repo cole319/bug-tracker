@@ -4,16 +4,19 @@ import React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
 
 import { signInWithGoogle, loginWithEmail } from "@/firebase/auth";
 
 export default function AuthModal() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const router = useRouter();
 
   const handleGoogle = async () => {
     try {
       await signInWithGoogle();
+      router.push("/");
     } catch (err) {
       console.error(err);
     }
@@ -22,6 +25,7 @@ export default function AuthModal() {
   const handleEmailLogin = async () => {
     try {
       await loginWithEmail(email, password);
+      router.push("/");
     } catch (err) {
       console.error(err);
     }

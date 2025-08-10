@@ -5,6 +5,7 @@ import { Playwrite_AU_QLD, Almendra, Inter } from "next/font/google";
 import "./globals.css";
 
 import { Providers } from "@/providers/providers";
+import Header from "@/components/Header";
 
 const playwrite = Playwrite_AU_QLD({
   variable: "--font-playwrite-au",
@@ -35,13 +36,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
-        <body
-          className={`${inter.variable} ${almendra.variable} ${playwrite.variable} antialiased`}
-        >
+      <body
+        className={`${inter.variable} ${almendra.variable} ${playwrite.variable} antialiased`}
+      >
+        <Providers>
+          <Header />
           {children}
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }
