@@ -25,9 +25,9 @@ const menuItems = [
 export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<Boolean>(false);
   return (
-    <section className="w-full relative pb-[4rem]">
+    <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
       <div className="flex justify-start lg:flex-row flex-col items-end">
-        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem]">
+        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem] fixed bg-bg-base dark:bg-d-bg-base w-full z-70">
           {menuItems.map((menuItem) => (
             <button
               key={menuItem.id}
@@ -93,6 +93,8 @@ export default function DashBoard() {
       </div>
 
       <div className="pt-[1.5rem] flex flex-col gap-[1rem]">
+        <IssueCard />
+        <IssueCard />
         <IssueCard />
         <IssueCard />
         <IssueCard />

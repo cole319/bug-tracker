@@ -26,8 +26,8 @@ export default function Home() {
   if (!user) return null;
 
   return (
-    <div className="relative bg-bg-base dark:bg-d-bg-base min-h-screen text-text-primary font-primary w-full">
-      <div className="relative px-[1rem] lg:px-[4rem] flex justify-between gap-[2rem]">
+    <div className="relative bg-bg-base dark:bg-d-bg-base min-h-screen text-text-primary font-primary w-full pt-[8rem]">
+      <div className="relative px-[1rem] lg:px-[4rem] flex justify-between gap-[2rem] md:py-[1rem]">
         <SideBar />
         <DashBoard />
         <AddButton />
