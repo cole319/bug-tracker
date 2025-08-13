@@ -54,7 +54,7 @@ export default function Header() {
             </button>
 
             {profileMenuOpen && (
-              <div className="absolute bg-card-bg dark:bg-d-card-bg border-[0.2px] border-accent-primary/20 dark:border-d-accent-primary/20 p-[1rem] right-[1rem] z-50 rounded-md">
+              <div className="fixed bg-card-bg dark:bg-d-card-bg border-[0.2px] border-accent-primary/20 dark:border-d-accent-primary/20 p-[1rem] right-[1rem] z-[120] rounded-md">
                 <button
                   className="bg-accent-primary dark:bg-d-text-primary text-d-text-primary dark:text-text-primary font-medium text-[1rem] flex gap-[1rem] justify-center items-center px-[1rem] py-[0.5rem] cursor-pointer rounded-md"
                   onClick={handleLogout}

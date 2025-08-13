@@ -18,15 +18,41 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </h1>
         <p className="text-[0.8rem]">{issue.id}</p>
       </div>
-      <div>{issue.description}</div>
+      <div className="text-[0.9rem]">
+        {issue.description.length <= 100
+          ? issue.description
+          : issue.description.slice(0, 100) + "..."}
+      </div>
       <div className="sm:flex gap-[1.5rem] text-[0.8rem] font-semibold items-center">
-        <p className="text-accent-red">{issue.priority}</p>
-        <p className="text-accent-red flex items-center gap-[0.3rem]">
-          <span className="text-[1.2rem]">
-            <GoDotFill />
-          </span>
-          {issue.status}
-        </p>
+        {issue.priority === "low" && <p className="text-accent-green">Low</p>}
+        {issue.priority === "medium" && (
+          <p className="text-accent-yellow">Medium</p>
+        )}
+        {issue.priority === "high" && <p className="text-accent-red">High</p>}
+        {issue.status === "open" && (
+          <p className="text-accent-red flex items-center gap-[0.3rem]">
+            <span className="text-[1.2rem]">
+              <GoDotFill />
+            </span>
+            Open
+          </p>
+        )}
+        {issue.status === "in_progress" && (
+          <p className="text-accent-yellow flex items-center gap-[0.3rem]">
+            <span className="text-[1.2rem]">
+              <GoDotFill />
+            </span>
+            In Progress
+          </p>
+        )}
+        {issue.status === "resolved" && (
+          <p className="text-accent-green flex items-center gap-[0.3rem]">
+            <span className="text-[1.2rem]">
+              <GoDotFill />
+            </span>
+            Resolved
+          </p>
+        )}
         <p className="flex items-center gap-[0.5rem]">
           <span>
             <FaUserCog />

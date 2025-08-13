@@ -43,7 +43,7 @@ export default function DashBoard() {
   return (
     <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
       <div className="flex justify-start lg:flex-row flex-col items-end">
-        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem] fixed bg-bg-base dark:bg-d-bg-base w-full z-70 border-b-[0.2px] border-accent-primary/20 pb-[0.5rem]">
+        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem] fixed bg-bg-base dark:bg-d-bg-base z-50 border-b-[0.2px] border-accent-primary/20 pb-[0.5rem]">
           {menuItems.map((menuItem) => (
             <button
               key={menuItem.id}
@@ -110,7 +110,7 @@ export default function DashBoard() {
 
       <div className="pt-[0.5rem] flex flex-col gap-[1rem]">
         {loading && (
-          <div className="flex justify-center items-center gap-[1rem]">
+          <div className="flex justify-start items-center gap-[1rem] text-d-accent-primary dark:text-d-accent-primary/40">
             Loading issues...{" "}
             <span className="animate-spin">
               <ImSpinner9 />

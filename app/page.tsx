@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import SideBar from "@/components/SideBar";
 import DashBoard from "@/components/DashBoard";
 import AddButton from "@/components/AddButton";
+import AddIssueModal from "@/components/AddIssueModal";
 import BottomMenu from "@/components/BottomMenu";
 
 export default function Home() {
@@ -32,6 +33,10 @@ export default function Home() {
         <DashBoard />
         <AddButton />
       </div>
+      <div className="flex justify-center">
+        <AddIssueModal onClose={() => {}} />
+      </div>
+
       <BottomMenu />
     </div>
   );
