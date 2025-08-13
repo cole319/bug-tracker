@@ -1,11 +1,17 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import React from "react";
 import { CiSearch } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
-import IssueCard from "./IssueCard";
+import { ImSpinner, ImSpinner9 } from "react-icons/im";
+
+import { useAppDispatch, useAppSelector } from "@/stores/storeHooks";
+import { subscribeToIssues } from "@/firebase/issues";
+import { setIssues, setLoading } from "@/features/issues/issuesSlice";
+import { RootState } from "@/stores/store";
+import IssueCard from "@/components/IssueCard";
 
 const menuItems = [
   {
@@ -24,10 +30,20 @@ const menuItems = [
 
 export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<Boolean>(false);
+  const dispatch = useAppDispatch();
+  const { items, loading } = useAppSelector((s: RootState) => s.issues);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    const unsub = subscribeToIssues((issues) => {
+      dispatch(setIssues(issues));
+    });
+    return () => unsub();
+  }, [dispatch]);
   return (
     <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
       <div className="flex justify-start lg:flex-row flex-col items-end">
-        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem] fixed bg-bg-base dark:bg-d-bg-base w-full z-70">
+        <nav className="hidden lg:flex justify-start items-center xl:gap-[3rem] lg:gap-[1rem] fixed bg-bg-base dark:bg-d-bg-base w-full z-70 border-b-[0.2px] border-accent-primary/20 pb-[0.5rem]">
           {menuItems.map((menuItem) => (
             <button
               key={menuItem.id}
@@ -37,7 +53,7 @@ export default function DashBoard() {
             </button>
           ))}
 
-          <div className="flex justify-center items-center gap-[0.5rem] border-[0.2px] py-[0.5rem] px-[1rem] rounded-full text-md border-d-accent-primary/50 ">
+          <div className="flex justify-center items-center gap-[0.5rem] border-[0.2px] py-[0.5rem] px-[1rem] rounded-full text-md border-accent-primary/50 ">
             <input
               type="text"
               placeholder="Search issues..."
@@ -92,12 +108,20 @@ export default function DashBoard() {
         )}
       </div>
 
-      <div className="pt-[1.5rem] flex flex-col gap-[1rem]">
-        <IssueCard />
-        <IssueCard />
-        <IssueCard />
-        <IssueCard />
-        <IssueCard />
+      <div className="pt-[0.5rem] flex flex-col gap-[1rem]">
+        {loading && (
+          <div className="flex justify-center items-center gap-[1rem]">
+            Loading issues...{" "}
+            <span className="animate-spin">
+              <ImSpinner9 />
+            </span>
+          </div>
+        )}
+        <div className="grid gap-4">
+          {items.map((issue) => (
+            <IssueCard key={issue.id} issue={issue} />
+          ))}
+        </div>
       </div>
     </section>
   );
