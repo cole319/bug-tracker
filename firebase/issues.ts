@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import app from "./config";
 import { v4 as uuidv4 } from "uuid";
+import { Timestamp } from "firebase/firestore";
 
 const db = getFirestore(app);
 const issuesCol = collection(db, "issues");
@@ -38,7 +39,8 @@ export type Issue = {
     displayName?: string | null;
     email?: string | null;
   } | null;
-  createdAt?: any;
+  createdAt?: number | null;
+  updatedAt?: number | null; // ← add this
 };
 
 // helper to generate readable id: bug#YYYYMMDD-xxxx
@@ -86,16 +88,37 @@ export async function fetchIssuesOnce(limit = 100) {
 
 // Realtime listener helper
 export function subscribeToIssues(
-  onChange: (issues: any[]) => void,
-  opts?: { status?: string; priority?: string } // optional filter
+  onChange: (issues: Issue[]) => void,
+  opts?: { status?: string; priority?: string }
 ): Unsubscribe {
   const constraints: any[] = [];
   if (opts?.status) constraints.push(where("status", "==", opts.status));
   if (opts?.priority) constraints.push(where("priority", "==", opts.priority));
+
   const q = query(issuesCol, orderBy("createdAt", "desc"), ...constraints);
+
   const unsub = onSnapshot(q, (snapshot: QuerySnapshot) => {
-    const issues = snapshot.docs.map((d) => d.data());
+    const issues = snapshot.docs.map((d) => {
+      const raw = d.data();
+      const data = raw as Omit<Issue, "id" | "createdAt" | "updatedAt">;
+
+      const issue: Issue = {
+        id: d.id,
+        ...data,
+        createdAt:
+          raw.createdAt instanceof Timestamp
+            ? raw.createdAt.toMillis()
+            : raw.createdAt ?? null,
+        updatedAt:
+          raw.updatedAt instanceof Timestamp
+            ? raw.updatedAt.toMillis()
+            : raw.updatedAt ?? null,
+      };
+      return issue;
+    });
+
     onChange(issues);
   });
+
   return unsub;
 }

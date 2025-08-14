@@ -67,7 +67,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
           <span>
             <MdDateRange />
           </span>
-          {issue.createdAt ? getTimeAgo(issue.createdAt.toDate()) : "just now"}
+          {issue.createdAt ? getTimeAgo(new Date(issue.createdAt)) : "just now"}
         </p>
       </div>
     </div>

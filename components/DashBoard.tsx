@@ -7,7 +7,7 @@ import React from "react";
 import { CiSearch } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
-import { ImSpinner, ImSpinner9 } from "react-icons/im";
+import { ImSpinner9 } from "react-icons/im";
 
 import { useAppDispatch, useAppSelector } from "@/stores/storeHooks";
 import { subscribeToIssues } from "@/firebase/issues";
