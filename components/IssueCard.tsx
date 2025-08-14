@@ -69,6 +69,12 @@ export default function IssueCard({ issue }: IssueCardProps) {
           </span>
           {issue.createdAt ? getTimeAgo(new Date(issue.createdAt)) : "just now"}
         </p>
+        <p className="flex items-center gap-[0.5rem]">
+          <span>
+            <MdDateRange />
+          </span>
+          {issue.updatedAt ? getTimeAgo(new Date(issue.updatedAt)) : "just now"}
+        </p>
       </div>
     </div>
   );
