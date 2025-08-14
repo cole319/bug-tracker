@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 import SideBar from "@/components/SideBar";
 import DashBoard from "@/components/DashBoard";
-import AddButton from "@/components/AddButton";
+import AddFloatingButton from "@/components/AddFloatingButton";
 import AddIssueModal from "@/components/AddIssueModal";
 import BottomMenu from "@/components/BottomMenu";
 
@@ -31,7 +31,7 @@ export default function Home() {
       <div className="relative px-[1rem] lg:px-[4rem] flex justify-between gap-[2rem] md:py-[1rem]">
         <SideBar />
         <DashBoard />
-        <AddButton />
+        <AddFloatingButton />
       </div>
       <div className="flex justify-center">
         <AddIssueModal onClose={() => {}} />
