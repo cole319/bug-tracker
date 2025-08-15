@@ -45,7 +45,7 @@ export default function AddIssueModal({ onClose }: { onClose: () => void }) {
 
   return (
     <form
-      className="py-[2rem] px-[3rem] w-full max-w-1/2 bg-card-bg dark:bg-d-card-bg dark:border-[0.2px] rounded-lg shadow-accent-primary/40 shadow-2xl"
+      className="py-[2rem] px-[3rem] w-[60%] bg-card-bg dark:bg-d-card-bg dark:border-[0.2px] rounded-lg shadow-accent-primary/40 shadow-2xl"
       onSubmit={handleSubmit}
     >
       <h2 className="text-xl font-semibold pb-4 dark:text-d-text-primary">

@@ -4,7 +4,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import SideBar from "@/components/SideBar";
 import DashBoard from "@/components/DashBoard";
@@ -15,6 +15,11 @@ import BottomMenu from "@/components/BottomMenu";
 export default function Home() {
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -29,14 +34,15 @@ export default function Home() {
   return (
     <div className="relative bg-bg-base dark:bg-d-bg-base min-h-screen text-text-primary font-primary w-full pt-[8rem]">
       <div className="relative px-[1rem] lg:px-[4rem] flex justify-between gap-[2rem] md:py-[1rem]">
-        <SideBar />
         <DashBoard />
-        <AddFloatingButton />
+        <SideBar onOpenModal={handleOpenModal} />
+        <AddFloatingButton onOpenModal={handleOpenModal} />
       </div>
-      <div className="flex justify-center">
-        <AddIssueModal onClose={() => {}} />
-      </div>
-
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <AddIssueModal onClose={handleCloseModal} />
+        </div>
+      )}
       <BottomMenu />
     </div>
   );

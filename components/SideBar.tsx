@@ -30,10 +30,10 @@ const menuItems = [
   },
 ];
 
-export default function SideBar() {
-  const [active, setActive] = useState<Boolean>(false);
+export default function SideBar({ onOpenModal }: { onOpenModal: () => void }) {
+  const [active, setActive] = useState<boolean>(false);
   return (
-    <section className="hidden fixed z-70 lg:block bg-card-bg dark:bg-d-card-bg p-[1rem] shadow-accent-primary/40 dark:border-[0.2px] shadow-2xl rounded-lg w-[20rem] h-fit">
+    <section className="hidden fixed z-50 lg:block bg-card-bg dark:bg-d-card-bg p-[1rem] shadow-accent-primary/40 dark:border-[0.2px] shadow-2xl rounded-lg w-[20rem] h-fit">
       <div className="flex flex-col justify center items-start pt-[1rem] pb-[1.5rem] gap-[0.5rem]">
         {menuItems.map((menuItem) => (
           <button
@@ -47,7 +47,10 @@ export default function SideBar() {
           </button>
         ))}
       </div>
-      <button className="bg-accent-primary dark:bg-d-text-primary font-semibold text-d-text-primary dark:text-text-primary py-[0.6rem] px-[2rem] w-full rounded-lg cursor-pointer hover:bg-accent-primary/90 dark:hover:bg-d-text-primary/90 flex items-center justify-center gap-[1rem] ease-in-out duration-400">
+      <button
+        onClick={onOpenModal}
+        className="bg-accent-primary dark:bg-d-text-primary font-semibold text-d-text-primary dark:text-text-primary py-[0.6rem] px-[2rem] w-full rounded-lg cursor-pointer hover:bg-accent-primary/90 dark:hover:bg-d-text-primary/90 flex items-center justify-center gap-[1rem] ease-in-out duration-400"
+      >
         <span>
           <FaPlus />
         </span>

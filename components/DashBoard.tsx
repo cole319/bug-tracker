@@ -8,12 +8,16 @@ import { CiSearch } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import { ImSpinner9 } from "react-icons/im";
+import { FaPlus } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "@/stores/storeHooks";
 import { subscribeToIssues } from "@/firebase/issues";
 import { setIssues, setLoading } from "@/features/issues/issuesSlice";
 import { RootState } from "@/stores/store";
 import IssueCard from "@/components/IssueCard";
+import AddIssueModal from "@/components/AddIssueModal";
+import SideBar from "@/components/SideBar";
+import AddFloatingButton from "@/components/AddFloatingButton";
 
 const menuItems = [
   {
@@ -31,12 +35,12 @@ const menuItems = [
 ];
 
 export default function DashBoard() {
-  const [menuOpen, setMenuOpen] = useState<Boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
   const issues = useAppSelector((state: RootState) => state.issues.items);
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -48,7 +52,7 @@ export default function DashBoard() {
 
   const handleNewIssue = (newIssue: any) => {
     dispatch(setIssues([newIssue, ...issues])); // prepend to top
-    setModalOpen(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -70,7 +74,7 @@ export default function DashBoard() {
               placeholder="Search issues..."
               className="outline-none dark:placeholder:text-d-accent-primary/50"
             />
-            <p className="text-[1.4rem] dark:text-d-accent-primary/70 ">
+            <p className="text-[1.4rem] dark:text-d-accent-primary/70">
               <CiSearch />
             </p>
           </div>
