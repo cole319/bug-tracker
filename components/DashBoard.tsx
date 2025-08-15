@@ -34,6 +34,9 @@ export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<Boolean>(false);
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
+  const issues = useAppSelector((state: RootState) => state.issues.items);
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -42,6 +45,12 @@ export default function DashBoard() {
     });
     return () => unsub();
   }, [dispatch]);
+
+  const handleNewIssue = (newIssue: any) => {
+    dispatch(setIssues([newIssue, ...issues])); // prepend to top
+    setModalOpen(false);
+  };
+
   return (
     <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
       <div className="flex justify-start lg:flex-row flex-col items-end">
