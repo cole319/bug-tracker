@@ -104,6 +104,7 @@ export function subscribeToIssues(
 
       const issue: Issue = {
         id: d.id,
+
         ...data,
         createdAt:
           raw.createdAt instanceof Timestamp
