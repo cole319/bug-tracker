@@ -1,6 +1,6 @@
 // components/IssueCard.tsx
-
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/stores/storeHooks";
 import { removeIssue } from "@/features/issues/issuesSlice";
 import { deleteIssue } from "@/firebase/issues";
@@ -11,6 +11,7 @@ import { Issue, IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
 import { db } from "@/firebase/config";
 import { deleteDoc, doc } from "firebase/firestore";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface IssueCardProps {
   issue: IssueWithDoc;
@@ -19,13 +20,29 @@ interface IssueCardProps {
 export default function IssueCard({ issue }: IssueCardProps) {
   const dispatch = useAppDispatch();
 
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+
   // const handleDelete = async (id: string) => {
   //   await deleteIssue(id);
   //   dispatch(removeIssue(id));
   // };
 
   return (
-    <div className="bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
+    <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
+      {confirmModalOpen && (
+        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <ConfirmationModal
+            message={
+              <h1>
+                Are you sure you want to delete issue :
+                <span className="font-semibold">${issue.id}</span>?
+              </h1>
+            }
+            onConfirm={() => {}}
+            onCancel={() => {}}
+          />
+        </div>
+      )}
       <div className="md:flex justify-between items-center">
         <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
           {issue.title}
@@ -36,9 +53,12 @@ export default function IssueCard({ issue }: IssueCardProps) {
             <MdEditDocument />
           </button>
           <button
-            onClick={async () => {
-              await deleteIssue(issue.docId); // delete from Firestore
-              dispatch(removeIssue(issue.docId)); // sync Redux immediately
+            // onClick={async () => {
+            // await deleteIssue(issue.docId);
+            // dispatch(removeIssue(issue.docId));
+            // }}
+            onClick={() => {
+              setConfirmModalOpen(true);
             }}
             className="text-accent-red cursor-pointer"
           >

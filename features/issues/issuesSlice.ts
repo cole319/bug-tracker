@@ -1,10 +1,10 @@
 // features/issues/issueSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Issue } from "@/firebase/issues";
+import { Issue, IssueWithDoc } from "@/firebase/issues";
 
 interface IssuesState {
-  items: Issue[];
+  items: IssueWithDoc[];
   loading: boolean;
   error: string | null;
 }
@@ -19,10 +19,10 @@ const issuesSlice = createSlice({
   name: "issues",
   initialState,
   reducers: {
-    setIssues: (state, action: PayloadAction<Issue[]>) => {
+    setIssues: (state, action: PayloadAction<IssueWithDoc[]>) => {
       state.items = action.payload;
     },
-    addIssue: (state, action: PayloadAction<Issue>) => {
+    addIssue: (state, action: PayloadAction<IssueWithDoc>) => {
       state.items.unshift(action.payload);
     },
     updateIssueInState: (
