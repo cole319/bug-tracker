@@ -1,7 +1,9 @@
 // features/issues/issueSlice.ts
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import { Issue, IssueWithDoc } from "@/firebase/issues";
+import { RootState } from "@/stores/store";
+import { selectFilter } from "@/features/filter/filterSlice";
 
 interface IssuesState {
   items: IssueWithDoc[];
@@ -56,3 +58,36 @@ export const {
 } = issuesSlice.actions;
 
 export default issuesSlice.reducer;
+
+export const selectIssues = (state: RootState) => state.issues.items;
+
+export const selectFilteredIssues = createSelector(
+  [selectIssues, selectFilter],
+  (issues, filter) => {
+    return issues.filter((issue) => {
+      // Firestore already filtered status/priority/etc.
+      // Here you refine further in-memory:
+
+      if (filter.scope === "user") {
+        if (filter.assignedTo && issue.assignedTo?.uid !== filter.assignedTo) {
+          return false;
+        }
+        if (filter.createdBy && issue.createdBy.uid !== filter.createdBy) {
+          return false;
+        }
+      }
+
+      if (filter.search) {
+        const search = filter.search.toLowerCase();
+        if (
+          !issue.title.toLowerCase().includes(search) &&
+          !issue.description.toLowerCase().includes(search)
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+);
