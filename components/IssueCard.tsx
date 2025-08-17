@@ -5,13 +5,15 @@ import { useAppSelector, useAppDispatch } from "@/stores/storeHooks";
 import { removeIssue } from "@/features/issues/issuesSlice";
 import { deleteIssue } from "@/firebase/issues";
 import { FaUserCog } from "react-icons/fa";
-import { MdDateRange, MdDelete } from "react-icons/md";
+import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
-import { Issue } from "@/firebase/issues";
+import { Issue, IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
+import { db } from "@/firebase/config";
+import { deleteDoc, doc } from "firebase/firestore";
 
 interface IssueCardProps {
-  issue: Issue;
+  issue: IssueWithDoc;
 }
 
 export default function IssueCard({ issue }: IssueCardProps) {
@@ -29,11 +31,14 @@ export default function IssueCard({ issue }: IssueCardProps) {
           {issue.title}
         </h1>
         <div className="flex justify-center items-center gap-[1rem]">
-          <p className="text-[0.8rem]">{issue.id}</p>
+          <p className="text-[0.6rem]">{issue.id}</p>
+          <button className="dark:text-d-text-primary cursor-pointer">
+            <MdEditDocument />
+          </button>
           <button
             onClick={async () => {
-              await deleteIssue(issue.id); // delete from Firestore
-              dispatch(removeIssue(issue.id)); // update Redux state
+              await deleteIssue(issue.docId); // delete from Firestore
+              dispatch(removeIssue(issue.docId)); // sync Redux immediately
             }}
             className="text-accent-red cursor-pointer"
           >

@@ -24,7 +24,7 @@ const db = getFirestore(app);
 const issuesCol = collection(db, "issues");
 
 export type Issue = {
-  id: string;
+  id: string; // Custom ID (shown in UI, e.g. BUG#20250816-XXXX)
   title: string;
   description: string;
   priority: "high" | "medium" | "low";
@@ -40,8 +40,10 @@ export type Issue = {
     email?: string | null;
   } | null;
   createdAt?: number | null;
-  updatedAt?: number | null; // ← add this
+  updatedAt?: number | null;
 };
+
+export type IssueWithDoc = Issue & { docId: string };
 
 // helper to generate readable id: bug#YYYYMMDD-xxxx
 export function generateIssueId() {
@@ -55,13 +57,13 @@ export function generateIssueId() {
 }
 
 export async function createIssue(payload: Omit<Issue, "id" | "createdAt">) {
-  const id = generateIssueId();
+  const customId = generateIssueId();
   const docRef = await addDoc(issuesCol, {
     ...payload,
-    id,
+    id: customId, // custom issue ID stored in Firestore
     createdAt: serverTimestamp(),
   });
-  return { id: docRef.id, docRef };
+  return { docId: docRef.id, id: customId };
 }
 
 export async function updateIssue(issueId: string, patch: Partial<Issue>) {
@@ -73,10 +75,15 @@ export async function updateIssue(issueId: string, patch: Partial<Issue>) {
   return true;
 }
 
-export async function deleteIssue(issueId: string) {
-  const issueDoc = doc(db, "issues", issueId);
-  await deleteDoc(issueDoc);
-  return true;
+// export async function deleteIssue(issueId: string) {
+//   const issueDoc = doc(db, "issues", issueId);
+//   await deleteDoc(issueDoc);
+//   return true;
+// }
+
+export async function deleteIssue(docId: string) {
+  const ref = doc(db, "issues", docId);
+  await deleteDoc(ref);
 }
 
 // One-off fetch (non-realtime)
@@ -88,7 +95,7 @@ export async function fetchIssuesOnce(limit = 100) {
 
 // Realtime listener helper
 export function subscribeToIssues(
-  onChange: (issues: Issue[]) => void,
+  onChange: (issues: IssueWithDoc[]) => void,
   opts?: { status?: string; priority?: string }
 ): Unsubscribe {
   const constraints: any[] = [];
@@ -97,29 +104,26 @@ export function subscribeToIssues(
 
   const q = query(issuesCol, orderBy("createdAt", "desc"), ...constraints);
 
-  const unsub = onSnapshot(q, (snapshot: QuerySnapshot) => {
-    const issues = snapshot.docs.map((d) => {
-      const raw = d.data();
-      const data = raw as Omit<Issue, "id" | "createdAt" | "updatedAt">;
-
-      const issue: Issue = {
-        id: d.id,
-
-        ...data,
-        createdAt:
-          raw.createdAt instanceof Timestamp
-            ? raw.createdAt.toMillis()
-            : raw.createdAt ?? null,
-        updatedAt:
-          raw.updatedAt instanceof Timestamp
-            ? raw.updatedAt.toMillis()
-            : raw.updatedAt ?? null,
+  return onSnapshot(q, (snapshot: QuerySnapshot) => {
+    const issues: IssueWithDoc[] = snapshot.docs.map((d) => {
+      const raw = d.data() as Issue & {
+        createdAt?: Timestamp | null;
+        updatedAt?: Timestamp | null;
       };
-      return issue;
-    });
 
+      return {
+        ...raw,
+        docId: d.id,
+        createdAt:
+          (raw.createdAt as any) instanceof Timestamp
+            ? (raw.createdAt as Timestamp).toMillis()
+            : (raw.createdAt as number | null) ?? null,
+        updatedAt:
+          (raw.updatedAt as any) instanceof Timestamp
+            ? (raw.updatedAt as Timestamp).toMillis()
+            : (raw.updatedAt as number | null) ?? null,
+      };
+    });
     onChange(issues);
   });
-
-  return unsub;
 }
