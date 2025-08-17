@@ -8,16 +8,12 @@ import { CiSearch } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import { ImSpinner9 } from "react-icons/im";
-import { FaPlus } from "react-icons/fa";
 
 import { useAppDispatch, useAppSelector } from "@/stores/storeHooks";
 import { subscribeToIssues } from "@/firebase/issues";
 import { setIssues, setLoading } from "@/features/issues/issuesSlice";
 import { RootState } from "@/stores/store";
 import IssueCard from "@/components/IssueCard";
-import AddIssueModal from "@/components/AddIssueModal";
-import SideBar from "@/components/SideBar";
-import AddFloatingButton from "@/components/AddFloatingButton";
 
 const menuItems = [
   {
@@ -38,22 +34,20 @@ export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
-  const issues = useAppSelector((state: RootState) => state.issues.items);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(setLoading(true));
+    if (items.length === 0) dispatch(setLoading(true));
+
     const unsub = subscribeToIssues((issues) => {
       dispatch(setIssues(issues));
     });
     return () => unsub();
   }, [dispatch]);
 
-  const handleNewIssue = (newIssue: any) => {
-    dispatch(setIssues([newIssue, ...issues])); // prepend to top
-    setIsModalOpen(false);
-  };
+  // const handleNewIssue = (newIssue: any) => {
+  //   dispatch(setIssues([newIssue, ...issues])); // prepend to top
+  //   setIsModalOpen(false);
+  // };
 
   return (
     <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
