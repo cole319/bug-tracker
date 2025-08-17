@@ -38,8 +38,14 @@ export default function IssueCard({ issue }: IssueCardProps) {
                 <span className="font-semibold">${issue.id}</span>?
               </h1>
             }
-            onConfirm={() => {}}
-            onCancel={() => {}}
+            onConfirm={async () => {
+              await deleteIssue(issue.docId);
+              dispatch(removeIssue(issue.docId));
+              setConfirmModalOpen(false);
+            }}
+            onCancel={() => {
+              setConfirmModalOpen(false);
+            }}
           />
         </div>
       )}
