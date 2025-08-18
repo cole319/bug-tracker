@@ -56,6 +56,7 @@ export function generateIssueId() {
   return `BUG#${y}${m}${d}-${suffix}`;
 }
 
+// Create a new Issue and add on the dashboard
 export async function createIssue(payload: Omit<Issue, "id" | "createdAt">) {
   const customId = generateIssueId();
   const docRef = await addDoc(issuesCol, {
@@ -66,21 +67,20 @@ export async function createIssue(payload: Omit<Issue, "id" | "createdAt">) {
   return { docId: docRef.id, id: customId };
 }
 
-export async function updateIssue(issueId: string, patch: Partial<Issue>) {
-  const issueDoc = doc(db, "issues", issueId);
-  await updateDoc(issueDoc, {
-    ...patch,
+// Updates editable fields of the issue and updatedAt timestamp
+export async function updateIssue(docId: string, patch: Partial<Issue>) {
+  const issueRef = doc(db, "issues", docId);
+
+  // Prevent overriding id
+  const { id: _, ...safePatch } = patch;
+
+  await updateDoc(issueRef, {
+    ...safePatch,
     updatedAt: serverTimestamp(),
   });
-  return true;
 }
 
-// export async function deleteIssue(issueId: string) {
-//   const issueDoc = doc(db, "issues", issueId);
-//   await deleteDoc(issueDoc);
-//   return true;
-// }
-
+// Delete an issue
 export async function deleteIssue(docId: string) {
   const ref = doc(db, "issues", docId);
   await deleteDoc(ref);
@@ -91,6 +91,34 @@ export async function fetchIssuesOnce(limit = 100) {
   const q = query(issuesCol, orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => d.data() as DocumentData);
+}
+
+// Assign Issue to an user and update state to "in_progress"
+export async function assignIssue(
+  docId: string,
+  user: { uid: string; displayName?: string | null; email?: string | null }
+) {
+  const issueRef = doc(db, "issues", docId);
+
+  await updateDoc(issueRef, {
+    assignedTo: {
+      uid: user.uid,
+      displayName: user.displayName || null,
+      email: user.email || null,
+    },
+    status: "in_progress",
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// Mark an issue as resolved
+export async function resolveIssue(docId: string) {
+  const issueRef = doc(db, "issues", docId);
+
+  await updateDoc(issueRef, {
+    status: "resolved",
+    updatedAt: serverTimestamp(),
+  });
 }
 
 // Realtime listener helper
