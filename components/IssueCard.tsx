@@ -34,8 +34,8 @@ export default function IssueCard({ issue }: IssueCardProps) {
           <ConfirmationModal
             message={
               <h1>
-                Are you sure you want to delete issue :
-                <span className="font-semibold">${issue.id}</span>?
+                Are you sure you want to delete issue :{" "}
+                <span className="font-semibold">{issue.id}</span>?
               </h1>
             }
             onConfirm={async () => {

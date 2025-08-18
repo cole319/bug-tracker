@@ -14,6 +14,7 @@ import { subscribeToIssues } from "@/firebase/issues";
 import { setIssues, setLoading } from "@/features/issues/issuesSlice";
 import { RootState } from "@/stores/store";
 import IssueCard from "@/components/IssueCard";
+import { DiVim } from "react-icons/di";
 
 const menuItems = [
   {
@@ -32,14 +33,19 @@ const menuItems = [
 
 export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  // const [loadingIcon, setLoadingIcon] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
 
   useEffect(() => {
-    if (items.length === 0) dispatch(setLoading(true));
-
+    dispatch(setLoading(true));
+    // if (items.length !== 0) {
+    //   setLoading(false);
+    //   setLoadingIcon(loading);
+    // }
     const unsub = subscribeToIssues((issues) => {
       dispatch(setIssues(issues));
+      dispatch(setLoading(false));
     });
     return () => unsub();
   }, [dispatch]);
@@ -118,19 +124,22 @@ export default function DashBoard() {
       </div>
 
       <div className="pt-[0.5rem] flex flex-col gap-[1rem]">
-        {loading && (
+        {loading ? (
           <div className="flex justify-start items-center gap-[1rem] text-d-accent-primary dark:text-d-accent-primary/40">
             Loading issues...{" "}
             <span className="animate-spin">
               <ImSpinner9 />
             </span>
           </div>
+        ) : items.length === 0 ? (
+          <h1 className="text-center pt-[2rem]">No Issues to display</h1>
+        ) : (
+          <div className="grid gap-4">
+            {items.map((issue) => (
+              <IssueCard key={issue.id} issue={issue} />
+            ))}
+          </div>
         )}
-        <div className="grid gap-4">
-          {items.map((issue) => (
-            <IssueCard key={issue.id} issue={issue} />
-          ))}
-        </div>
       </div>
     </section>
   );
