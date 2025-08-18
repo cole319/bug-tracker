@@ -11,6 +11,7 @@ import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
 
 import ConfirmationModal from "./ConfirmationModal";
+import EditIssueModal from "./EditIssueModal";
 
 interface IssueCardProps {
   issue: IssueWithDoc;
@@ -20,6 +21,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
   const dispatch = useAppDispatch();
 
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   return (
     <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
@@ -43,13 +45,23 @@ export default function IssueCard({ issue }: IssueCardProps) {
           />
         </div>
       )}
+      {editModalOpen && (
+        <EditIssueModal
+          currTitle={issue.title}
+          currDescription={issue.description}
+          currPriority={issue.priority}
+        />
+      )}
       <div className="md:flex justify-between items-center">
         <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
           {issue.title}
         </h1>
         <div className="flex justify-center items-center gap-[1rem]">
           <p className="text-[0.6rem]">{issue.id}</p>
-          <button className="dark:text-d-text-primary cursor-pointer">
+          <button
+            onClick={() => setEditModalOpen(true)}
+            className="dark:text-d-text-primary cursor-pointer"
+          >
             <MdEditDocument />
           </button>
           <button

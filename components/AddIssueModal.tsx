@@ -4,15 +4,12 @@ import React, { useState } from "react";
 import { createIssue, Issue } from "@/firebase/issues";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/store";
-import { useRouter } from "next/navigation";
-import { IoIosArrowDown } from "react-icons/io";
 
 export default function AddIssueModal({ onClose }: { onClose: () => void }) {
   const user = useSelector((s: RootState) => s.auth.user);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

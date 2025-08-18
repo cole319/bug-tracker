@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { BsCurrencyDollar, BsSlashLg } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa";
@@ -31,7 +31,6 @@ const menuItems = [
 ];
 
 export default function SideBar({ onOpenModal }: { onOpenModal: () => void }) {
-  const [active, setActive] = useState<boolean>(false);
   return (
     <section className="hidden fixed z-50 lg:block bg-card-bg dark:bg-d-card-bg p-[1rem] shadow-accent-primary/40 dark:border-[0.2px] shadow-2xl rounded-lg w-[20rem] h-fit">
       <div className="flex flex-col justify center items-start pt-[1rem] pb-[1.5rem] gap-[0.5rem]">
