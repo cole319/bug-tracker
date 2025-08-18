@@ -14,7 +14,6 @@ import { subscribeToIssues } from "@/firebase/issues";
 import { setIssues, setLoading } from "@/features/issues/issuesSlice";
 import { RootState } from "@/stores/store";
 import IssueCard from "@/components/IssueCard";
-import { DiVim } from "react-icons/di";
 
 const menuItems = [
   {

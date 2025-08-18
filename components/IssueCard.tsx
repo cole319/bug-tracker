@@ -1,16 +1,15 @@
 // components/IssueCard.tsx
 "use client";
 import React, { useState } from "react";
-import { useAppSelector, useAppDispatch } from "@/stores/storeHooks";
+import { useAppDispatch } from "@/stores/storeHooks";
 import { removeIssue } from "@/features/issues/issuesSlice";
 import { deleteIssue } from "@/firebase/issues";
 import { FaUserCog } from "react-icons/fa";
 import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
-import { Issue, IssueWithDoc } from "@/firebase/issues";
+import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
-import { db } from "@/firebase/config";
-import { deleteDoc, doc } from "firebase/firestore";
+
 import ConfirmationModal from "./ConfirmationModal";
 
 interface IssueCardProps {
@@ -21,11 +20,6 @@ export default function IssueCard({ issue }: IssueCardProps) {
   const dispatch = useAppDispatch();
 
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-
-  // const handleDelete = async (id: string) => {
-  //   await deleteIssue(id);
-  //   dispatch(removeIssue(id));
-  // };
 
   return (
     <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
@@ -59,10 +53,6 @@ export default function IssueCard({ issue }: IssueCardProps) {
             <MdEditDocument />
           </button>
           <button
-            // onClick={async () => {
-            // await deleteIssue(issue.docId);
-            // dispatch(removeIssue(issue.docId));
-            // }}
             onClick={() => {
               setConfirmModalOpen(true);
             }}
