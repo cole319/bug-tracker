@@ -7,12 +7,14 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { createUserProfile } from "./users";
 
 const googleProvider = new GoogleAuthProvider();
 
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    await createUserProfile(result.user);
     return result.user;
   } catch (error) {
     console.error("Google Sign-In Error:", error);
@@ -27,6 +29,7 @@ export const registerWithEmail = async (email: string, password: string) => {
       email,
       password
     );
+    await createUserProfile(userCredential.user);
     return userCredential.user;
   } catch (error) {
     console.error("Email Registration Error:", error);
@@ -41,6 +44,7 @@ export const loginWithEmail = async (email: string, password: string) => {
       email,
       password
     );
+    await createUserProfile(userCredential.user);
     return userCredential.user;
   } catch (error) {
     console.error("Email Login Error:", error);

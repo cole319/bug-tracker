@@ -12,6 +12,7 @@ import { getTimeAgo } from "@/utils/time";
 
 import ConfirmationModal from "./ConfirmationModal";
 import EditIssueModal from "./EditIssueModal";
+import AssignToModal from "./AssignToModal";
 
 interface IssueCardProps {
   issue: IssueWithDoc;
@@ -22,6 +23,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
 
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [assignToModalOpen, setAssignToModalOpen] = useState<boolean>(false);
 
   return (
     <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
@@ -60,6 +62,11 @@ export default function IssueCard({ issue }: IssueCardProps) {
               setEditModalOpen(false);
             }}
           />
+        </div>
+      )}
+      {assignToModalOpen && (
+        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <AssignToModal />
         </div>
       )}
       <div className="md:flex justify-between items-center">
@@ -124,10 +131,14 @@ export default function IssueCard({ issue }: IssueCardProps) {
           <span>
             <FaUserCog />
           </span>
-          {issue.assignedTo?.displayName
-            ? issue.assignedTo.displayName
-            : "Unassigned"}
+          {issue.assignedTo?.displayName ?? "Unassigned"}
         </p>
+        <button
+          onClick={() => setAssignToModalOpen(true)}
+          className="ml-2 text-sm text-accent-primary hover:underline"
+        >
+          {issue.assignedTo ? "Reassign" : "Assign"}
+        </button>
         <p className="flex items-center gap-[0.5rem]">
           <span>
             <MdDateRange />
