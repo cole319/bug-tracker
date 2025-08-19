@@ -2,8 +2,8 @@
 "use client";
 import React, { useState } from "react";
 import { useAppDispatch } from "@/stores/storeHooks";
-import { removeIssue } from "@/features/issues/issuesSlice";
-import { deleteIssue } from "@/firebase/issues";
+import { removeIssue, updateIssueInState } from "@/features/issues/issuesSlice";
+import { deleteIssue, updateIssue } from "@/firebase/issues";
 import { FaUserCog } from "react-icons/fa";
 import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
@@ -46,11 +46,19 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </div>
       )}
       {editModalOpen && (
-        <EditIssueModal
-          currTitle={issue.title}
-          currDescription={issue.description}
-          currPriority={issue.priority}
-        />
+        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <EditIssueModal
+            currTitle={issue.title}
+            currDescription={issue.description}
+            currPriority={issue.priority}
+            onSave={async (patch) => {
+              await updateIssue(issue.docId, patch);
+            }}
+            onCancel={() => {
+              setEditModalOpen(false);
+            }}
+          />
+        </div>
       )}
       <div className="md:flex justify-between items-center">
         <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
