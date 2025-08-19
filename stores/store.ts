@@ -3,6 +3,7 @@ import themeReducer from "@/features/theme/themeSlice";
 import authReducer from "@/features/auth/authSlice";
 import issuesReducer from "@/features/issues/issuesSlice";
 import filterReducer from "@/features/filter/filterSlice";
+import teamReducer from "@/features/team/teamSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     issues: issuesReducer,
     filter: filterReducer,
+    team: teamReducer,
   },
 });
 
