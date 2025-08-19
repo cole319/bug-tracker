@@ -27,20 +27,29 @@ export default function EditIssueModal({
 
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave({
-      title: newTitle,
-      description: newDescription,
-      priority: newPriority as "low" | "medium" | "high",
-    });
-  };
-
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(e) => {
+        e.preventDefault();
+        setConfirmModalOpen(true);
+      }}
       className="py-[2rem] px-[3rem] w-[60%] bg-card-bg dark:bg-d-card-bg dark:border-[0.2px] rounded-lg shadow-accent-primary/40 shadow-2xl"
     >
+      {confirmModalOpen && (
+        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <ConfirmationModal
+            message={<h1>Are you sure you want to save changes?</h1>}
+            onConfirm={() =>
+              onSave({
+                title: newTitle,
+                description: newDescription,
+                priority: newPriority as "low" | "medium" | "high",
+              })
+            }
+            onCancel={() => onCancel}
+          />
+        </div>
+      )}
       <h2 className="text-xl font-semibold pb-4 dark:text-d-text-primary">
         Edit Issue
       </h2>
