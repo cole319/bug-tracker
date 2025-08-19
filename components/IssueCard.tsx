@@ -136,7 +136,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </p>
         <p className="flex items-center gap-[0.5rem]">
           <span>
-            <MdDateRange />
+            <MdEditDocument />
           </span>
           {issue.updatedAt ? getTimeAgo(new Date(issue.updatedAt)) : "just now"}
         </p>

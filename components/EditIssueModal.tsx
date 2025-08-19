@@ -1,5 +1,6 @@
 // components/EditIssueModal.tsx
 import React, { useState } from "react";
+import ConfirmationModal from "./ConfirmationModal";
 
 interface EditIssueModalProps {
   currTitle: string;
@@ -23,6 +24,8 @@ export default function EditIssueModal({
   const [newTitle, setNewTitle] = useState<string>(currTitle);
   const [newDescription, setNewDescription] = useState<string>(currDescription);
   const [newPriority, setNewPriority] = useState<string>(currPriority);
+
+  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
