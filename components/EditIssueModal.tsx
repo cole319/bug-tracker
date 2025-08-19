@@ -46,7 +46,7 @@ export default function EditIssueModal({
                 priority: newPriority as "low" | "medium" | "high",
               })
             }
-            onCancel={() => onCancel}
+            onCancel={() => setConfirmModalOpen(false)}
           />
         </div>
       )}
