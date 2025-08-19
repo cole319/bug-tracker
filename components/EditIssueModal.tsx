@@ -47,13 +47,13 @@ export default function EditIssueModal({
         Edit Issue
       </h2>
       <input
-        value={currTitle}
+        value={newTitle}
         onChange={(e) => setNewTitle(e.target.value)}
         placeholder="Title..."
         className="w-full border-accent-primary dark:border-d-accent-primary/50 border-[0.2px] rounded-lg py-[0.5rem] px-[1rem] mb-[1.5rem] outline-none placeholder:text-d-text-secondary/50"
       />
       <textarea
-        value={currDescription}
+        value={newDescription}
         onChange={(e) => setNewDescription(e.target.value)}
         placeholder="Description..."
         className="w-full border-accent-primary dark:border-d-accent-primary/50 border-[0.2px] rounded-lg py-[0.5rem] px-[1rem] mb-[1.5rem] h-[8rem] outline-none placeholder:text-d-text-secondary/50"
@@ -63,7 +63,7 @@ export default function EditIssueModal({
           Select priority
         </h1>
         <select
-          value={currPriority}
+          value={newPriority}
           onChange={(e) => setNewPriority(e.target.value as any)}
           className="w-1/4 mb-4 border-[0.2px] border-accent-primary dark:border-d-accent-primary/50 py-[0.5rem] rounded-lg appearance-none text-center outline-none cursor-pointer dark:text-d-text-secondary"
         >

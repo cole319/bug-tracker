@@ -53,6 +53,8 @@ export default function IssueCard({ issue }: IssueCardProps) {
             currPriority={issue.priority}
             onSave={async (patch) => {
               await updateIssue(issue.docId, patch);
+              dispatch(updateIssueInState({ docId: issue.docId, patch }));
+              setEditModalOpen(false);
             }}
             onCancel={() => {
               setEditModalOpen(false);

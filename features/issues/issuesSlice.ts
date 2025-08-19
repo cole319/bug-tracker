@@ -29,11 +29,16 @@ const issuesSlice = createSlice({
     },
     updateIssueInState: (
       state,
-      action: PayloadAction<{ id: string; patch: Partial<Issue> }>
+      action: PayloadAction<{ docId: string; patch: Partial<Issue> }>
     ) => {
-      const idx = state.items.findIndex((i) => i.id === action.payload.id);
+      const { docId, patch } = action.payload;
+      const idx = state.items.findIndex((i) => i.docId === docId);
       if (idx !== -1) {
-        state.items[idx] = { ...state.items[idx], ...action.payload.patch };
+        state.items[idx] = {
+          ...state.items[idx],
+          ...patch,
+          updatedAt: Date.now(),
+        };
       }
     },
     removeIssue: (state, action: PayloadAction<string>) => {
