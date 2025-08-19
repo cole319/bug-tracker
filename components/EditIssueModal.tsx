@@ -1,8 +1,5 @@
 // components/EditIssueModal.tsx
 import React, { useState } from "react";
-import { createIssue, Issue } from "@/firebase/issues";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores/store";
 
 interface EditIssueModalProps {
   currTitle: string;
@@ -23,8 +20,6 @@ export default function EditIssueModal({
   onSave,
   onCancel,
 }: EditIssueModalProps) {
-  const user = useSelector((s: RootState) => s.auth.user);
-
   const [newTitle, setNewTitle] = useState<string>(currTitle);
   const [newDescription, setNewDescription] = useState<string>(currDescription);
   const [newPriority, setNewPriority] = useState<string>(currPriority);
