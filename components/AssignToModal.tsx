@@ -21,6 +21,7 @@ export default function AssignedToModal({
   const { loading } = useAppSelector((s: RootState) => s.team);
   const { members } = useAppSelector((s: RootState) => s.team);
   const [search, setSearch] = useState<string>("");
+  const [selected, setSelected] = useState<TeamMember | null>(null);
 
   const filteredMembers = members.filter(
     (m) =>
@@ -55,10 +56,7 @@ export default function AssignedToModal({
             <button
               key={member.uid}
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                onAssign(member);
-              }}
+              onClick={() => setSelected(member)}
               className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent-primary/10"
             >
               <div>
@@ -74,10 +72,19 @@ export default function AssignedToModal({
       )}
       <div className="flex justify-end gap-[1rem] font-medium">
         <button
-          onClick={() => onCancel}
+          onClick={onCancel}
           className="btn-cancel border-[1px] dark:border-d-text-primary text-text-primary dark:text-d-text-primary py-[0.5rem] px-[2rem] rounded-lg cursor-pointer"
         >
           Cancel
+        </button>
+        <button
+          type="submit"
+          onClick={() => {
+            if (selected) onAssign(selected);
+          }}
+          className="btn-primary border-[1px] dark:border-d-text-primary py-[0.5rem] px-[2rem] rounded-lg cursor-pointer bg-accent-primary dark:bg-d-text-primary text-d-text-primary dark:text-text-primary"
+        >
+          Assign
         </button>
       </div>
     </form>

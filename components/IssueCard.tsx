@@ -88,6 +88,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
                 displayName: issue.createdBy.displayName ?? null,
                 email: issue.createdBy.email ?? null,
               },
+              assignedTo: issue.assignedTo ?? null,
               createdAt: issue.createdAt,
               updatedAt: issue.updatedAt,
             }}
