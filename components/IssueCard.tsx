@@ -75,6 +75,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
               dispatch(assignIssue({ issueId: issue.docId, member }));
               setAssignToModalOpen(false);
             }}
+            onCancel={() => setAssignToModalOpen(false)}
             issue={{
               id: issue.id,
               docId: issue.docId,
