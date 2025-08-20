@@ -2,7 +2,11 @@
 "use client";
 import React, { useState } from "react";
 import { useAppDispatch } from "@/stores/storeHooks";
-import { removeIssue, updateIssueInState } from "@/features/issues/issuesSlice";
+import {
+  removeIssue,
+  updateIssueInState,
+  assignIssue,
+} from "@/features/issues/issuesSlice";
 import { deleteIssue, updateIssue } from "@/firebase/issues";
 import { FaUserCog } from "react-icons/fa";
 import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
@@ -66,7 +70,27 @@ export default function IssueCard({ issue }: IssueCardProps) {
       )}
       {assignToModalOpen && (
         <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <AssignToModal />
+          <AssignToModal
+            onAssign={(member) => {
+              dispatch(assignIssue({ issueId: issue.docId, member }));
+              setAssignToModalOpen(false);
+            }}
+            issue={{
+              id: issue.id,
+              docId: issue.docId,
+              title: issue.title,
+              description: issue.description,
+              priority: issue.priority,
+              status: issue.status,
+              createdBy: {
+                uid: issue.createdBy.uid,
+                displayName: issue.createdBy.displayName ?? null,
+                email: issue.createdBy.email ?? null,
+              },
+              createdAt: issue.createdAt,
+              updatedAt: issue.updatedAt,
+            }}
+          />
         </div>
       )}
       <div className="md:flex justify-between items-center">
@@ -149,7 +173,11 @@ export default function IssueCard({ issue }: IssueCardProps) {
           <span>
             <MdEditDocument />
           </span>
-          {issue.updatedAt ? getTimeAgo(new Date(issue.updatedAt)) : "just now"}
+          {issue.updatedAt
+            ? getTimeAgo(new Date(issue.updatedAt))
+            : issue.createdAt
+            ? getTimeAgo(new Date(issue.createdAt))
+            : "just now"}
         </p>
       </div>
     </div>

@@ -1,9 +1,17 @@
 // features/issues/issueSlice.ts
 
-import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  createSelector,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
 import { Issue, IssueWithDoc } from "@/firebase/issues";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase/config";
 import { RootState } from "@/stores/store";
 import { selectFilter } from "@/features/filter/filterSlice";
+import { TeamMember } from "../team/teamSlice";
 
 interface IssuesState {
   items: IssueWithDoc[];
@@ -16,6 +24,22 @@ const initialState: IssuesState = {
   loading: false,
   error: null,
 };
+
+export const assignIssue = createAsyncThunk(
+  "issues/assignIssue",
+  async ({ issueId, member }: { issueId: string; member: TeamMember }) => {
+    const issueRef = doc(db, "issues", issueId);
+    await updateDoc(issueRef, {
+      assignedTo: {
+        uid: member.uid,
+        displayName: member.displayName,
+        email: member.email,
+      },
+      status: "in_progress",
+    });
+    return { issueId, member };
+  }
+);
 
 const issuesSlice = createSlice({
   name: "issues",
@@ -42,7 +66,7 @@ const issuesSlice = createSlice({
       }
     },
     removeIssue: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((i) => i.id !== action.payload);
+      state.items = state.items.filter((i) => i.docId !== action.payload);
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -50,6 +74,20 @@ const issuesSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(assignIssue.fulfilled, (state, action) => {
+      const { issueId, member } = action.payload;
+      const idx = state.items.findIndex((i) => i.docId === issueId);
+      if (idx !== -1) {
+        state.items[idx] = {
+          ...state.items[idx],
+          assignedTo: member,
+          status: "in_progress",
+          updatedAt: Date.now(),
+        };
+      }
+    });
   },
 });
 

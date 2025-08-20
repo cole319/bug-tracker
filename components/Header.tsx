@@ -53,8 +53,8 @@ export default function Header() {
                   className="rounded-full cursor-pointer"
                 />
               ) : (
-                <div className="h-10 w-10 flex items-center justify-center rounded-full bg-accent-primary text-white font-bold cursor-pointer">
-                  {user.displayName?.charAt(0).toUpperCase() ?? "?"}
+                <div className="h-10 w-10 text-[1rem] flex items-center justify-center rounded-full bg-accent-primary text-white font-bold cursor-pointer">
+                  {user.email ? user.email.charAt(0).toUpperCase() : "?"}
                 </div>
               )}
             </button>
