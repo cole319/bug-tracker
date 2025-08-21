@@ -1,11 +1,12 @@
 // components/AssignToModal.tsx
+
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ImSpinner9 } from "react-icons/im";
-import { useAppSelector } from "@/stores/storeHooks";
+import { useAppSelector, useAppDispatch } from "@/stores/storeHooks";
 import { RootState } from "@/stores/store";
 import { IssueWithDoc } from "@/firebase/issues";
-import { TeamMember } from "@/features/team/teamSlice";
+import { TeamMember, fetchTeamMembers } from "@/features/team/teamSlice";
 
 interface AssignToModalProps {
   issue: IssueWithDoc;
@@ -18,8 +19,15 @@ export default function AssignToModal({
   onAssign,
   onCancel,
 }: AssignToModalProps) {
-  const { loading } = useAppSelector((s: RootState) => s.team);
-  const { members } = useAppSelector((s: RootState) => s.team);
+  const dispatch = useAppDispatch();
+  const { members, loading } = useAppSelector((s: RootState) => s.team);
+
+  useEffect(() => {
+    if (members.length === 0) {
+      dispatch(fetchTeamMembers());
+    }
+  }, [dispatch, members.length]);
+
   const [search, setSearch] = useState<string>("");
 
   const initialSelected: TeamMember | null = issue.assignedTo
@@ -40,7 +48,13 @@ export default function AssignToModal({
   );
 
   return (
-    <form className="py-[2rem] px-[3rem] w-[40%] bg-card-bg dark:bg-d-card-bg dark:border-[0.2px] rounded-lg shadow-accent-primary/40 shadow-2xl">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onAssign(selected); // <-- allow null to unassign
+      }}
+      className="py-[2rem] px-[3rem] w-[40%] bg-card-bg dark:bg-d-card-bg dark:border-[0.2px] rounded-lg shadow-accent-primary/40 shadow-2xl"
+    >
       <h2 className="text-xl font-semibold pb-4 dark:text-d-text-primary">
         Assign User
       </h2>
@@ -53,13 +67,13 @@ export default function AssignToModal({
       />
       {loading ? (
         <div className="flex justify-start items-center gap-[1rem] text-d-accent-primary dark:text-d-accent-primary/40">
-          Loading issues...{" "}
+          Loading Members...{" "}
           <span className="animate-spin">
             <ImSpinner9 />
           </span>
         </div>
       ) : filteredMembers.length === 0 ? (
-        <h1 className="text-center pt-[2rem]">No Member to display</h1>
+        <h1 className="text-center pt-[1rem]">No Member to display</h1>
       ) : (
         <div className="grid gap-4">
           {filteredMembers.map((member) => (
@@ -69,19 +83,20 @@ export default function AssignToModal({
               onClick={() => setSelected(member)}
               className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent-primary/10"
             >
-              <div>
+              <div className="flex flex-col items-start">
                 <p className="font-medium">{member.displayName}</p>
                 <p className="text-sm text-gray-500">{member.email}</p>
               </div>
-              {issue.assignedTo?.uid === member.uid && (
+              {selected?.uid === member.uid && (
                 <span className="text-accent-primary">✔</span>
               )}
             </button>
           ))}
         </div>
       )}
-      <div className="flex justify-end gap-[1rem] font-medium">
+      <div className="flex justify-end gap-[1rem] font-medium pt-[2rem]">
         <button
+          type="button"
           onClick={onCancel}
           className="btn-cancel border-[1px] dark:border-d-text-primary text-text-primary dark:text-d-text-primary py-[0.5rem] px-[2rem] rounded-lg cursor-pointer"
         >
@@ -89,9 +104,6 @@ export default function AssignToModal({
         </button>
         <button
           type="submit"
-          onClick={() => {
-            if (selected) onAssign(selected);
-          }}
           className="btn-primary border-[1px] dark:border-d-text-primary py-[0.5rem] px-[2rem] rounded-lg cursor-pointer bg-accent-primary dark:bg-d-text-primary text-d-text-primary dark:text-text-primary"
         >
           Assign

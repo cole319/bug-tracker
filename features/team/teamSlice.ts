@@ -22,7 +22,7 @@ const initialState: TeamState = {
 };
 
 // 🔹 Thunk: fetch all team members from Firestore
-export const fetchTeam = createAsyncThunk<TeamMember[]>(
+export const fetchTeamMembers = createAsyncThunk<TeamMember[]>(
   "team/fetchTeam",
   async () => {
     const members = await getTeamMembers();
@@ -36,20 +36,22 @@ const teamSlice = createSlice({
   reducers: {
     // optional reducer if you want to manually add/update members
     addMember: (state, action: PayloadAction<TeamMember>) => {
-      state.members.push(action.payload);
+      if (!state.members.find((m) => m.uid === action.payload.uid)) {
+        state.members.push(action.payload);
+      }
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTeam.pending, (state) => {
+      .addCase(fetchTeamMembers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchTeam.fulfilled, (state, action) => {
+      .addCase(fetchTeamMembers.fulfilled, (state, action) => {
         state.members = action.payload;
         state.loading = false;
       })
-      .addCase(fetchTeam.rejected, (state, action) => {
+      .addCase(fetchTeamMembers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to load team";
       });

@@ -33,7 +33,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
   return (
     <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
       {confirmModalOpen && (
-        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <ConfirmationModal
             message={
               <h1>
@@ -53,7 +53,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </div>
       )}
       {editModalOpen && (
-        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <EditIssueModal
             currTitle={issue.title}
             currDescription={issue.description}
@@ -73,8 +73,14 @@ export default function IssueCard({ issue }: IssueCardProps) {
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <AssignToModal
             onAssign={async (member: TeamMember | null) => {
-              dispatch(assignIssue({ issueId: issue.docId, member }));
-              setAssignToModalOpen(false);
+              try {
+                await dispatch(
+                  assignIssue({ issueId: issue.docId, member })
+                ).unwrap();
+                setAssignToModalOpen(false);
+              } catch (err) {
+                console.error("Failed to assign:", err);
+              }
             }}
             onCancel={() => setAssignToModalOpen(false)}
             issue={issue}

@@ -7,7 +7,7 @@ import {
   createAsyncThunk,
 } from "@reduxjs/toolkit";
 import { Issue, IssueWithDoc } from "@/firebase/issues";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { RootState } from "@/stores/store";
 import { selectFilter } from "@/features/filter/filterSlice";
@@ -35,14 +35,25 @@ export const assignIssue = createAsyncThunk(
     member: TeamMember | null;
   }) => {
     const issueRef = doc(db, "issues", issueId);
-    await updateDoc(issueRef, {
-      assignedTo: {
-        uid: member?.uid,
-        displayName: member?.displayName,
-        email: member?.email,
-      },
-      status: "in_progress",
-    });
+
+    if (member) {
+      await updateDoc(issueRef, {
+        assignedTo: {
+          uid: member.uid,
+          displayName: member.displayName ?? null,
+          email: member.email ?? null,
+        },
+        status: "in_progress",
+        updatedAt: serverTimestamp(),
+      });
+    } else {
+      await updateDoc(issueRef, {
+        assignedTo: null,
+        status: "open",
+        updatedAt: serverTimestamp(),
+      });
+    }
+
     return { issueId, member };
   }
 );
@@ -89,7 +100,7 @@ const issuesSlice = createSlice({
         state.items[idx] = {
           ...state.items[idx],
           assignedTo: member,
-          status: "in_progress",
+          status: member ? "in_progress" : "open",
           updatedAt: Date.now(),
         };
       }
