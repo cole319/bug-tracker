@@ -1,4 +1,5 @@
-import { db } from "./config"; // your initialized Firestore instance
+// firebase/team.ts
+import { db } from "./config";
 import { collection, getDocs } from "firebase/firestore";
 import { TeamMember } from "@/features/team/teamSlice";
 

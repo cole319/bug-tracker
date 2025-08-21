@@ -1,4 +1,4 @@
-// components/AssignedToModal.tsx
+// components/AssignToModal.tsx
 "use client";
 import React, { useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
@@ -7,26 +7,36 @@ import { RootState } from "@/stores/store";
 import { IssueWithDoc } from "@/firebase/issues";
 import { TeamMember } from "@/features/team/teamSlice";
 
-interface AssignedToModalProps {
+interface AssignToModalProps {
   issue: IssueWithDoc;
-  onAssign: (member: TeamMember) => void;
+  onAssign: (member: TeamMember | null) => void;
   onCancel: () => void;
 }
 
-export default function AssignedToModal({
+export default function AssignToModal({
   issue,
   onAssign,
   onCancel,
-}: AssignedToModalProps) {
+}: AssignToModalProps) {
   const { loading } = useAppSelector((s: RootState) => s.team);
   const { members } = useAppSelector((s: RootState) => s.team);
   const [search, setSearch] = useState<string>("");
-  const [selected, setSelected] = useState<TeamMember | null>(null);
 
+  const initialSelected: TeamMember | null = issue.assignedTo
+    ? {
+        uid: issue.assignedTo.uid,
+        displayName: issue.assignedTo.displayName ?? null,
+        email: issue.assignedTo.email ?? null,
+      }
+    : null;
+
+  const [selected, setSelected] = useState<TeamMember | null>(initialSelected);
+
+  const q = search.toLowerCase();
   const filteredMembers = members.filter(
     (m) =>
-      m.displayName?.toLowerCase().includes(search.toLowerCase()) ||
-      m.email?.toLowerCase().includes(search.toLowerCase())
+      (m.displayName ?? "").toLowerCase().includes(q) ||
+      (m.email ?? "").toLowerCase().includes(q)
   );
 
   return (

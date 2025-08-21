@@ -27,13 +27,19 @@ const initialState: IssuesState = {
 
 export const assignIssue = createAsyncThunk(
   "issues/assignIssue",
-  async ({ issueId, member }: { issueId: string; member: TeamMember }) => {
+  async ({
+    issueId,
+    member,
+  }: {
+    issueId: string;
+    member: TeamMember | null;
+  }) => {
     const issueRef = doc(db, "issues", issueId);
     await updateDoc(issueRef, {
       assignedTo: {
-        uid: member.uid,
-        displayName: member.displayName,
-        email: member.email,
+        uid: member?.uid,
+        displayName: member?.displayName,
+        email: member?.email,
       },
       status: "in_progress",
     });

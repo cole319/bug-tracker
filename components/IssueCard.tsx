@@ -17,6 +17,7 @@ import { getTimeAgo } from "@/utils/time";
 import ConfirmationModal from "./ConfirmationModal";
 import EditIssueModal from "./EditIssueModal";
 import AssignToModal from "./AssignToModal";
+import { TeamMember } from "@/features/team/teamSlice";
 
 interface IssueCardProps {
   issue: IssueWithDoc;
@@ -69,29 +70,14 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </div>
       )}
       {assignToModalOpen && (
-        <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <AssignToModal
-            onAssign={(member) => {
+            onAssign={async (member: TeamMember | null) => {
               dispatch(assignIssue({ issueId: issue.docId, member }));
               setAssignToModalOpen(false);
             }}
             onCancel={() => setAssignToModalOpen(false)}
-            issue={{
-              id: issue.id,
-              docId: issue.docId,
-              title: issue.title,
-              description: issue.description,
-              priority: issue.priority,
-              status: issue.status,
-              createdBy: {
-                uid: issue.createdBy.uid,
-                displayName: issue.createdBy.displayName ?? null,
-                email: issue.createdBy.email ?? null,
-              },
-              assignedTo: issue.assignedTo ?? null,
-              createdAt: issue.createdAt,
-              updatedAt: issue.updatedAt,
-            }}
+            issue={issue}
           />
         </div>
       )}
@@ -185,3 +171,21 @@ export default function IssueCard({ issue }: IssueCardProps) {
     </div>
   );
 }
+
+/*
+id: issue.id,
+docId: issue.docId,
+title: issue.title,
+description: issue.description,
+priority: issue.priority,
+status: issue.status,
+createdBy: {
+  uid: issue.createdBy.uid,
+  displayName: issue.createdBy.displayName ?? null,
+  email: issue.createdBy.email ?? null,
+},
+assignedTo: issue.assignedTo ?? null,
+createdAt: issue.createdAt,
+updatedAt: issue.updatedAt,
+
+*/
