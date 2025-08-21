@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile, // ⬅️ import this
 } from "firebase/auth";
 import { createUserProfile } from "./users";
 
@@ -14,7 +15,7 @@ const googleProvider = new GoogleAuthProvider();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    await createUserProfile(result.user);
+    await createUserProfile({ user: result.user });
     return result.user;
   } catch (error) {
     console.error("Google Sign-In Error:", error);
@@ -22,14 +23,30 @@ export const signInWithGoogle = async () => {
   }
 };
 
-export const registerWithEmail = async (email: string, password: string) => {
+// 🔹 modified to accept displayName
+export const registerWithEmail = async (
+  email: string,
+  password: string,
+  displayName?: string
+) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    await createUserProfile(userCredential.user);
+
+    // Sync with Firebase Auth profile too
+    if (displayName) {
+      await updateProfile(userCredential.user, { displayName });
+    }
+
+    // Save to Firestore
+    await createUserProfile({
+      user: userCredential.user,
+      displayName,
+    });
+
     return userCredential.user;
   } catch (error) {
     console.error("Email Registration Error:", error);
@@ -44,7 +61,7 @@ export const loginWithEmail = async (email: string, password: string) => {
       email,
       password
     );
-    await createUserProfile(userCredential.user);
+    await createUserProfile({ user: userCredential.user });
     return userCredential.user;
   } catch (error) {
     console.error("Email Login Error:", error);
