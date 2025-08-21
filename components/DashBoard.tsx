@@ -67,7 +67,7 @@ export default function DashBoard() {
             </button>
           ))}
 
-          <div className="flex justify-center items-center gap-[0.5rem] border-[0.2px] py-[0.5rem] px-[1rem] rounded-full text-md border-accent-primary/50 ">
+          <div className="flex justify-center items-center gap-[0.5rem] border-[0.2px] py-[0.5rem] px-[1rem] rounded-full text-md border-accent-primary/50 dark:border-d-accent-primary/50">
             <input
               type="text"
               placeholder="Search issues..."

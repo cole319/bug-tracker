@@ -115,66 +115,72 @@ export default function IssueCard({ issue }: IssueCardProps) {
           ? issue.description
           : issue.description.slice(0, 100) + "..."}
       </div>
+      <div className="flex justify-between items-center text-[0.8rem]">
+        <div className="sm:flex gap-[2rem] font-semibold items-center">
+          {issue.priority === "low" && <p className="text-accent-green">Low</p>}
+          {issue.priority === "medium" && (
+            <p className="text-accent-yellow">Medium</p>
+          )}
+          {issue.priority === "high" && <p className="text-accent-red">High</p>}
+          {issue.status === "open" && (
+            <p className="text-accent-red flex items-center gap-[0.3rem]">
+              <span className="text-[1.2rem]">
+                <GoDotFill />
+              </span>
+              Open
+            </p>
+          )}
+          {issue.status === "in_progress" && (
+            <p className="text-accent-yellow flex items-center gap-[0.3rem]">
+              <span className="text-[1.2rem]">
+                <GoDotFill />
+              </span>
+              In Progress
+            </p>
+          )}
+          {issue.status === "resolved" && (
+            <p className="text-accent-green flex items-center gap-[0.3rem]">
+              <span className="text-[1.2rem]">
+                <GoDotFill />
+              </span>
+              Resolved
+            </p>
+          )}
+          <div className="flex gap-[0.5rem] items-center">
+            <p className="flex items-center gap-[0.5rem]">
+              <FaUserCog />
+              <span className="text-accent-primary/70 dark:text-d-accent-primary/70">
+                {issue.assignedTo?.displayName ?? "Unassigned"}
+              </span>
+            </p>
+            <button
+              onClick={() => setAssignToModalOpen(true)}
+              className="text-sm text-text-primary cursor-pointer dark:text-d-text-primary"
+            >
+              {issue.assignedTo ? <FaArrowsRotate /> : <FaPlus />}
+            </button>
+          </div>
 
-      <div className="sm:flex gap-[2rem] text-[0.8rem] font-semibold items-center">
-        {issue.priority === "low" && <p className="text-accent-green">Low</p>}
-        {issue.priority === "medium" && (
-          <p className="text-accent-yellow">Medium</p>
-        )}
-        {issue.priority === "high" && <p className="text-accent-red">High</p>}
-        {issue.status === "open" && (
-          <p className="text-accent-red flex items-center gap-[0.3rem]">
-            <span className="text-[1.2rem]">
-              <GoDotFill />
-            </span>
-            Open
-          </p>
-        )}
-        {issue.status === "in_progress" && (
-          <p className="text-accent-yellow flex items-center gap-[0.3rem]">
-            <span className="text-[1.2rem]">
-              <GoDotFill />
-            </span>
-            In Progress
-          </p>
-        )}
-        {issue.status === "resolved" && (
-          <p className="text-accent-green flex items-center gap-[0.3rem]">
-            <span className="text-[1.2rem]">
-              <GoDotFill />
-            </span>
-            Resolved
-          </p>
-        )}
-        <div className="flex gap-[0.5rem] items-center">
           <p className="flex items-center gap-[0.5rem]">
-            <FaUserCog />
-            <span className="text-accent-primary/70 dark:text-d-accent-primary/70">
-              {issue.assignedTo?.displayName ?? "Unassigned"}
-            </span>
+            <MdDateRange />
+
+            {issue.createdAt
+              ? getTimeAgo(new Date(issue.createdAt))
+              : "just now"}
           </p>
-          <button
-            onClick={() => setAssignToModalOpen(true)}
-            className="text-sm text-text-primary cursor-pointer dark:text-d-text-primary"
-          >
-            {issue.assignedTo ? <FaArrowsRotate /> : <FaPlus />}
-          </button>
+          <p className="flex items-center gap-[0.5rem]">
+            <MdEditDocument />
+
+            {issue.updatedAt
+              ? getTimeAgo(new Date(issue.updatedAt))
+              : issue.createdAt
+              ? getTimeAgo(new Date(issue.createdAt))
+              : "just now"}
+          </p>
         </div>
-
-        <p className="flex items-center gap-[0.5rem]">
-          <MdDateRange />
-
-          {issue.createdAt ? getTimeAgo(new Date(issue.createdAt)) : "just now"}
-        </p>
-        <p className="flex items-center gap-[0.5rem]">
-          <MdEditDocument />
-
-          {issue.updatedAt
-            ? getTimeAgo(new Date(issue.updatedAt))
-            : issue.createdAt
-            ? getTimeAgo(new Date(issue.createdAt))
-            : "just now"}
-        </p>
+        <button className="text-neutral-50 dark:text-accent-green bg-accent-green dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200">
+          Mark Resolved
+        </button>
       </div>
     </div>
   );
