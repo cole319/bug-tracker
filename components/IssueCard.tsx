@@ -116,7 +116,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
           : issue.description.slice(0, 100) + "..."}
       </div>
 
-      <div className="sm:flex gap-[1.5rem] text-[0.8rem] font-semibold items-center">
+      <div className="sm:flex gap-[2rem] text-[0.8rem] font-semibold items-center">
         {issue.priority === "low" && <p className="text-accent-green">Low</p>}
         {issue.priority === "medium" && (
           <p className="text-accent-yellow">Medium</p>
@@ -147,15 +147,15 @@ export default function IssueCard({ issue }: IssueCardProps) {
           </p>
         )}
         <div className="flex gap-[0.5rem] items-center">
-          <p className="flex items-center gap-[0.5rem] text-accent-primary/70">
+          <p className="flex items-center gap-[0.5rem]">
             <FaUserCog />
-            <span className="text-accent-primary/70">
+            <span className="text-accent-primary/70 dark:text-d-accent-primary/70">
               {issue.assignedTo?.displayName ?? "Unassigned"}
             </span>
           </p>
           <button
             onClick={() => setAssignToModalOpen(true)}
-            className="text-sm text-text-primary cursor-pointer"
+            className="text-sm text-text-primary cursor-pointer dark:text-d-text-primary"
           >
             {issue.assignedTo ? <FaArrowsRotate /> : <FaPlus />}
           </button>
