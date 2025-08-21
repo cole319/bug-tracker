@@ -8,8 +8,9 @@ import {
   assignIssue,
 } from "@/features/issues/issuesSlice";
 import { deleteIssue, updateIssue } from "@/firebase/issues";
-import { FaUserCog } from "react-icons/fa";
+import { FaUserCog, FaPlus } from "react-icons/fa";
 import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
+import { FaArrowsRotate } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
@@ -145,28 +146,29 @@ export default function IssueCard({ issue }: IssueCardProps) {
             Resolved
           </p>
         )}
-        <p className="flex items-center gap-[0.5rem]">
-          <span>
+        <div className="flex gap-[0.5rem] items-center">
+          <p className="flex items-center gap-[0.5rem] text-accent-primary/70">
             <FaUserCog />
-          </span>
-          {issue.assignedTo?.displayName ?? "Unassigned"}
-        </p>
-        <button
-          onClick={() => setAssignToModalOpen(true)}
-          className="ml-2 text-sm text-accent-primary hover:underline"
-        >
-          {issue.assignedTo ? "Reassign" : "Assign"}
-        </button>
+            <span className="text-accent-primary/70">
+              {issue.assignedTo?.displayName ?? "Unassigned"}
+            </span>
+          </p>
+          <button
+            onClick={() => setAssignToModalOpen(true)}
+            className="text-sm text-text-primary cursor-pointer"
+          >
+            {issue.assignedTo ? <FaArrowsRotate /> : <FaPlus />}
+          </button>
+        </div>
+
         <p className="flex items-center gap-[0.5rem]">
-          <span>
-            <MdDateRange />
-          </span>
+          <MdDateRange />
+
           {issue.createdAt ? getTimeAgo(new Date(issue.createdAt)) : "just now"}
         </p>
         <p className="flex items-center gap-[0.5rem]">
-          <span>
-            <MdEditDocument />
-          </span>
+          <MdEditDocument />
+
           {issue.updatedAt
             ? getTimeAgo(new Date(issue.updatedAt))
             : issue.createdAt
