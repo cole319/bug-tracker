@@ -3,6 +3,8 @@
 import type { Metadata } from "next";
 import { Playwrite_AU_QLD, Almendra, Inter } from "next/font/google";
 import "./globals.css";
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes";
 
 import { Providers } from "@/providers/providers";
 import Header from "@/components/Header";
@@ -39,10 +41,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${almendra.variable} ${playwrite.variable} antialiased`}
       >
-        <Providers>
-          <Header />
-          {children}
-        </Providers>
+        <Theme>
+          <Providers>
+            <Header />
+            {children}
+          </Providers>
+        </Theme>
       </body>
     </html>
   );

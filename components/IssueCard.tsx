@@ -2,6 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { useAppDispatch } from "@/stores/storeHooks";
+import { Tooltip } from "@radix-ui/themes";
 import {
   removeIssue,
   updateIssueInState,
@@ -94,20 +95,24 @@ export default function IssueCard({ issue }: IssueCardProps) {
         </h1>
         <div className="flex justify-center items-center gap-[1rem]">
           <p className="text-[0.6rem]">{issue.id}</p>
-          <button
-            onClick={() => setEditModalOpen(true)}
-            className="dark:text-d-text-primary cursor-pointer"
-          >
-            <MdEditDocument />
-          </button>
-          <button
-            onClick={() => {
-              setConfirmModalOpen(true);
-            }}
-            className="text-accent-red cursor-pointer"
-          >
-            <MdDelete />
-          </button>
+          <Tooltip content="Edit Issue">
+            <button
+              onClick={() => setEditModalOpen(true)}
+              className="dark:text-d-text-primary cursor-pointer"
+            >
+              <MdEditDocument />
+            </button>
+          </Tooltip>
+          <Tooltip content="Delete Issue">
+            <button
+              onClick={() => {
+                setConfirmModalOpen(true);
+              }}
+              className="text-accent-red cursor-pointer"
+            >
+              <MdDelete />
+            </button>
+          </Tooltip>
         </div>
       </div>
       <div className="text-[0.9rem]">
@@ -157,19 +162,31 @@ export default function IssueCard({ issue }: IssueCardProps) {
               onClick={() => setAssignToModalOpen(true)}
               className="text-sm text-text-primary cursor-pointer dark:text-d-text-primary"
             >
-              {issue.assignedTo ? <FaArrowsRotate /> : <FaPlus />}
+              {issue.assignedTo ? (
+                <Tooltip content="Reassign Issue to Member">
+                  <FaArrowsRotate />
+                </Tooltip>
+              ) : (
+                <Tooltip content="Assign Issue to Member">
+                  <FaPlus />
+                </Tooltip>
+              )}
             </button>
           </div>
 
           <p className="flex items-center gap-[0.5rem]">
-            <MdDateRange />
+            <Tooltip content="Created">
+              <MdDateRange />
+            </Tooltip>
 
             {issue.createdAt
               ? getTimeAgo(new Date(issue.createdAt))
               : "just now"}
           </p>
           <p className="flex items-center gap-[0.5rem]">
-            <MdEditDocument />
+            <Tooltip content="Last updated">
+              <MdEditDocument />
+            </Tooltip>
 
             {issue.updatedAt
               ? getTimeAgo(new Date(issue.updatedAt))
