@@ -15,6 +15,7 @@ import { FaArrowsRotate } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
+import { MdDone } from "react-icons/md";
 
 import ConfirmationModal from "./ConfirmationModal";
 import EditIssueModal from "./EditIssueModal";
@@ -195,9 +196,18 @@ export default function IssueCard({ issue }: IssueCardProps) {
               : "just now"}
           </p>
         </div>
-        <button className="text-neutral-50 dark:text-accent-green bg-accent-green dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200">
-          Mark Resolved
-        </button>
+        {issue.status !== "resolved" && (
+          <button className="text-neutral-50 dark:text-accent-green bg-accent-green dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200">
+            Mark Resolved
+          </button>
+        )}
+        {issue.status === "resolved" && (
+          <Tooltip content="Issue Resolved">
+            <span className="bg-accent-green dark:bg-green-700 p-[0.2rem] rounded-full text-neutral-50">
+              <MdDone />
+            </span>
+          </Tooltip>
+        )}
       </div>
     </div>
   );
