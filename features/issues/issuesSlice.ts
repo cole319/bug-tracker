@@ -6,7 +6,7 @@ import {
   createSelector,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { Issue, IssueWithDoc } from "@/firebase/issues";
+import { Issue, IssueWithDoc, resolveIssue } from "@/firebase/issues";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { RootState } from "@/stores/store";
@@ -57,6 +57,19 @@ export const assignIssue = createAsyncThunk(
     return { issueId, member };
   }
 );
+
+export const resolveIssueThunk = createAsyncThunk<
+  { docId: string }, // return type
+  string // input type (docId)
+>("issues/resolveIssue", async (docId, { rejectWithValue }) => {
+  try {
+    await resolveIssue(docId); // update in Firestore
+    return { docId };
+  } catch (err: any) {
+    console.error("Resolve issue failed:", err);
+    return rejectWithValue(err.message);
+  }
+});
 
 const issuesSlice = createSlice({
   name: "issues",
