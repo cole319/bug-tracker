@@ -197,7 +197,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
           </p>
         </div>
         {issue.status !== "resolved" && (
-          <button className="text-neutral-50 dark:text-accent-green bg-accent-green dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200">
+          <button className="text-neutral-50 dark:text-accent-green bg-accent-green hover:bg-green-600 dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200">
             Mark Resolved
           </button>
         )}
