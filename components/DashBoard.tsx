@@ -33,27 +33,19 @@ const menuItems = [
 
 export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  // const [loadingIcon, setLoadingIcon] = useState<boolean>(true);
+
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
 
   useEffect(() => {
     dispatch(setLoading(true));
-    // if (items.length !== 0) {
-    //   setLoading(false);
-    //   setLoadingIcon(loading);
-    // }
+
     const unsub = subscribeToIssues((issues) => {
       dispatch(setIssues(issues));
       dispatch(setLoading(false));
     });
     return () => unsub();
   }, [dispatch]);
-
-  // const handleNewIssue = (newIssue: any) => {
-  //   dispatch(setIssues([newIssue, ...issues])); // prepend to top
-  //   setIsModalOpen(false);
-  // };
 
   return (
     <section className="w-full relative pb-[4rem] md:pl-[22rem] pt-[2rem]">
