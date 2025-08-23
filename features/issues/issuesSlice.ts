@@ -13,16 +13,36 @@ import { RootState } from "@/stores/store";
 import { selectFilter } from "@/features/filter/filterSlice";
 import { TeamMember } from "../team/teamSlice";
 
-interface IssuesState {
-  items: IssueWithDoc[];
-  loading: boolean;
-  error: string | null;
+// interface IssuesState {
+//   items: IssueWithDoc[];
+//   loading: boolean;
+//   error: string | null;
+// }
+
+interface IssueUIState {
+  status: "all" | "open" | "in_progress" | "resolved";
+  priority: "all" | "low" | "medium" | "high";
+  search: string;
+
+  // new fields
+  scope: "all" | "user" | "team";
+  assignedTo?: string; // uid of the assignee
+  createdBy?: string; // uid of the creator
 }
 
-const initialState: IssuesState = {
-  items: [],
-  loading: false,
-  error: null,
+// const initialState: IssuesState = {
+//   items: [],
+//   loading: false,
+//   error: null,
+// };
+
+const initialUIState: IssueUIState = {
+  status: "all",
+  priority: "all",
+  search: "",
+  scope: "all",
+  assignedTo: undefined,
+  createdBy: undefined,
 };
 
 export const assignIssue = createAsyncThunk(
@@ -73,7 +93,12 @@ export const resolveIssueThunk = createAsyncThunk<
 
 const issuesSlice = createSlice({
   name: "issues",
-  initialState,
+  initialState: {
+    items: [] as IssueWithDoc[],
+    filters: initialUIState,
+    loading: false,
+    error: null as string | null,
+  },
   reducers: {
     setIssues: (state, action: PayloadAction<IssueWithDoc[]>) => {
       state.items = action.payload;
@@ -97,6 +122,9 @@ const issuesSlice = createSlice({
     },
     removeIssue: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter((i) => i.docId !== action.payload);
+    },
+    setFilters: (state, action: PayloadAction<Partial<IssueUIState>>) => {
+      state.filters = { ...state.filters, ...action.payload };
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -126,6 +154,7 @@ export const {
   addIssue,
   updateIssueInState,
   removeIssue,
+  setFilters,
   setError,
   setLoading,
 } = issuesSlice.actions;
@@ -134,27 +163,49 @@ export default issuesSlice.reducer;
 
 export const selectIssues = (state: RootState) => state.issues.items;
 
-export const selectFilteredIssues = createSelector(
-  [selectIssues, selectFilter],
-  (issues, filter) => {
-    return issues.filter((issue) => {
-      // Firestore already filtered status/priority/etc.
-      // Here you refine further in-memory:
+// base selectors
 
-      if (filter.scope === "user") {
-        if (filter.assignedTo && issue.assignedTo?.uid !== filter.assignedTo) {
+const selectFilters = (state: RootState) => state.issues.filters;
+
+// refined selector
+export const selectFilteredIssues = createSelector(
+  [selectIssues, selectFilters],
+  (issues, filters) => {
+    return issues.filter((issue) => {
+      // --- scope filtering ---
+      if (filters.scope === "user") {
+        if (
+          filters.assignedTo &&
+          issue.assignedTo?.uid !== filters.assignedTo
+        ) {
           return false;
         }
-        if (filter.createdBy && issue.createdBy.uid !== filter.createdBy) {
+        if (filters.createdBy && issue.createdBy.uid !== filters.createdBy) {
           return false;
         }
       }
 
-      if (filter.search) {
-        const search = filter.search.toLowerCase();
+      // --- status filtering ---
+      if (filters.status && filters.status !== "all") {
+        if (issue.status !== filters.status) {
+          return false;
+        }
+      }
+
+      // --- priority filtering ---
+      if (filters.priority && filters.priority !== "all") {
+        if (issue.priority !== filters.priority) {
+          return false;
+        }
+      }
+
+      // --- search filtering ---
+      if (filters.search) {
+        const search = filters.search.toLowerCase();
         if (
           !issue.title.toLowerCase().includes(search) &&
-          !issue.description.toLowerCase().includes(search)
+          !issue.description.toLowerCase().includes(search) &&
+          !issue.id.toLowerCase().includes(search)
         ) {
           return false;
         }
