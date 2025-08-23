@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { CiSearch } from "react-icons/ci";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { GiCoffeeCup } from "react-icons/gi";
 import { IoCloseOutline } from "react-icons/io5";
 import { ImSpinner9 } from "react-icons/im";
 
@@ -131,7 +132,12 @@ export default function DashBoard() {
             </span>
           </div>
         ) : items.length === 0 ? (
-          <h1 className="text-center pt-[2rem]">No Issues to display</h1>
+          <h1 className="pt-[2rem] flex gap-[1rem] justify-center items-center">
+            No Issues to display{" "}
+            <span className="text-[2rem]">
+              <GiCoffeeCup />
+            </span>
+          </h1>
         ) : (
           <div className="grid gap-4">
             {items.map((issue) => (

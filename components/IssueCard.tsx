@@ -197,7 +197,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
               : "just now"}
           </p>
         </div>
-        {issue.status !== "resolved" && (
+        {issue.status == "in_progress" && (
           <button
             onClick={() => dispatch(resolveIssueThunk(issue.docId))}
             className="text-neutral-50 dark:text-accent-green bg-accent-green hover:bg-green-600 dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200"
