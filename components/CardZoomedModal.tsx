@@ -21,20 +21,18 @@ import { MdDone } from "react-icons/md";
 import ConfirmationModal from "./ConfirmationModal";
 import EditIssueModal from "./EditIssueModal";
 import AssignToModal from "./AssignToModal";
-import CardZoomedModal from "./CardZoomedModal";
 import { TeamMember } from "@/features/team/teamSlice";
 
 interface IssueCardProps {
   issue: IssueWithDoc;
 }
 
-export default function IssueCard({ issue }: IssueCardProps) {
+export default function CardZoomedModal({ issue }: IssueCardProps) {
   const dispatch = useAppDispatch();
 
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [assignToModalOpen, setAssignToModalOpen] = useState<boolean>(false);
-  const [cardZoomed, setCardZoomed] = useState<boolean>(false);
 
   return (
     <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
@@ -119,11 +117,7 @@ export default function IssueCard({ issue }: IssueCardProps) {
           </Tooltip>
         </div>
       </div>
-      <div className="text-[0.9rem]">
-        {issue.description.length <= 100
-          ? issue.description
-          : issue.description.slice(0, 100) + "..."}
-      </div>
+      <div className="text-[0.9rem]">{issue.description}</div>
       <div className="flex justify-between items-center text-[0.8rem]">
         <div className="sm:flex gap-[2rem] font-semibold items-center">
           {issue.priority === "low" && <p className="text-accent-green">Low</p>}
@@ -218,21 +212,3 @@ export default function IssueCard({ issue }: IssueCardProps) {
     </div>
   );
 }
-
-/*
-id: issue.id,
-docId: issue.docId,
-title: issue.title,
-description: issue.description,
-priority: issue.priority,
-status: issue.status,
-createdBy: {
-  uid: issue.createdBy.uid,
-  displayName: issue.createdBy.displayName ?? null,
-  email: issue.createdBy.email ?? null,
-},
-assignedTo: issue.assignedTo ?? null,
-createdAt: issue.createdAt,
-updatedAt: issue.updatedAt,
-
-*/
