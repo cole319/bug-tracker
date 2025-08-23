@@ -1,123 +1,48 @@
 // components/IssueCard.tsx
 "use client";
 import React, { useState } from "react";
-import { useAppDispatch } from "@/stores/storeHooks";
+
 import { Tooltip } from "@radix-ui/themes";
-import {
-  removeIssue,
-  updateIssueInState,
-  assignIssue,
-  resolveIssueThunk,
-} from "@/features/issues/issuesSlice";
-import { deleteIssue, updateIssue } from "@/firebase/issues";
-import { FaUserCog, FaPlus } from "react-icons/fa";
-import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
-import { FaArrowsRotate } from "react-icons/fa6";
+
+import { FaUserCog } from "react-icons/fa";
+import { MdDateRange, MdEditDocument } from "react-icons/md";
+
 import { GoDotFill } from "react-icons/go";
 import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
-import { MdDone } from "react-icons/md";
+import { IoMdClose } from "react-icons/io";
 
-import ConfirmationModal from "./ConfirmationModal";
-import EditIssueModal from "./EditIssueModal";
-import AssignToModal from "./AssignToModal";
-import { TeamMember } from "@/features/team/teamSlice";
-
-interface IssueCardProps {
+interface CardZoomedModalProps {
   issue: IssueWithDoc;
+  onClose: () => void;
 }
 
-export default function CardZoomedModal({ issue }: IssueCardProps) {
-  const dispatch = useAppDispatch();
-
-  const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-  const [assignToModalOpen, setAssignToModalOpen] = useState<boolean>(false);
-
+export default function CardZoomedModal({
+  issue,
+  onClose,
+}: CardZoomedModalProps) {
   return (
-    <div className="relative bg-card-bg dark:bg-d-card-bg py-[1.5rem] px-[1.5rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-full flex flex-col gap-[0.8rem] dark:text-d-text-secondary">
-      {confirmModalOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <ConfirmationModal
-            message={
-              <h1>
-                Are you sure you want to delete issue :{" "}
-                <span className="font-semibold">{issue.id}</span>?
-              </h1>
-            }
-            onConfirm={async () => {
-              await deleteIssue(issue.docId);
-              dispatch(removeIssue(issue.docId));
-              setConfirmModalOpen(false);
-            }}
-            onCancel={() => {
-              setConfirmModalOpen(false);
-            }}
-          />
+    <div className="relative flex flex-col justify-between bg-card-bg dark:bg-d-card-bg p-[2rem] shadow-accent-primary/20 dark:border-[0.2px] dark:border-d-text-secondary/20 shadow-2xl rounded-lg w-[60%] min-h-[20rem] gap-[0.8rem] dark:text-d-text-secondary">
+      <div className="flex flex-col gap-[1.2rem]">
+        <div className="md:flex justify-between items-center">
+          <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
+            {issue.title}
+          </h1>
+          <div className="flex justify-center items-center gap-[1rem]">
+            <p className="text-[0.6rem]">{issue.id}</p>
+            <Tooltip content="Close">
+              <button
+                onClick={onClose}
+                className="dark:text-d-text-primary cursor-pointer text-[1.8rem]"
+              >
+                <IoMdClose />
+              </button>
+            </Tooltip>
+          </div>
         </div>
-      )}
-      {editModalOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <EditIssueModal
-            currTitle={issue.title}
-            currDescription={issue.description}
-            currPriority={issue.priority}
-            onSave={async (patch) => {
-              await updateIssue(issue.docId, patch);
-              dispatch(updateIssueInState({ docId: issue.docId, patch }));
-              setEditModalOpen(false);
-            }}
-            onCancel={() => {
-              setEditModalOpen(false);
-            }}
-          />
-        </div>
-      )}
-      {assignToModalOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <AssignToModal
-            onAssign={async (member: TeamMember | null) => {
-              try {
-                await dispatch(
-                  assignIssue({ issueId: issue.docId, member })
-                ).unwrap();
-                setAssignToModalOpen(false);
-              } catch (err) {
-                console.error("Failed to assign:", err);
-              }
-            }}
-            onCancel={() => setAssignToModalOpen(false)}
-            issue={issue}
-          />
-        </div>
-      )}
-      <div className="md:flex justify-between items-center">
-        <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
-          {issue.title}
-        </h1>
-        <div className="flex justify-center items-center gap-[1rem]">
-          <p className="text-[0.6rem]">{issue.id}</p>
-          <Tooltip content="Edit Issue">
-            <button
-              onClick={() => setEditModalOpen(true)}
-              className="dark:text-d-text-primary cursor-pointer"
-            >
-              <MdEditDocument />
-            </button>
-          </Tooltip>
-          <Tooltip content="Delete Issue">
-            <button
-              onClick={() => {
-                setConfirmModalOpen(true);
-              }}
-              className="text-accent-red cursor-pointer"
-            >
-              <MdDelete />
-            </button>
-          </Tooltip>
-        </div>
+        <div className="text-[0.9rem]">{issue.description}</div>
       </div>
-      <div className="text-[0.9rem]">{issue.description}</div>
+
       <div className="flex justify-between items-center text-[0.8rem]">
         <div className="sm:flex gap-[2rem] font-semibold items-center">
           {issue.priority === "low" && <p className="text-accent-green">Low</p>}
@@ -156,20 +81,6 @@ export default function CardZoomedModal({ issue }: IssueCardProps) {
                 {issue.assignedTo?.displayName ?? "Unassigned"}
               </span>
             </p>
-            <button
-              onClick={() => setAssignToModalOpen(true)}
-              className="text-sm text-text-primary cursor-pointer dark:text-d-text-primary"
-            >
-              {issue.assignedTo ? (
-                <Tooltip content="Reassign Issue to Member">
-                  <FaArrowsRotate />
-                </Tooltip>
-              ) : (
-                <Tooltip content="Assign Issue to Member">
-                  <FaPlus />
-                </Tooltip>
-              )}
-            </button>
           </div>
 
           <p className="flex items-center gap-[0.5rem]">
@@ -193,21 +104,6 @@ export default function CardZoomedModal({ issue }: IssueCardProps) {
               : "just now"}
           </p>
         </div>
-        {issue.status == "in_progress" && (
-          <button
-            onClick={() => dispatch(resolveIssueThunk(issue.docId))}
-            className="text-neutral-50 dark:text-accent-green bg-accent-green hover:bg-green-600 dark:bg-transparent dark:border-[0.1px] dark:border-accent-green dark:hover:bg-accent-green/20 py-[0.1rem] px-[0.3rem] rounded-sm cursor-pointer font-medium ease-in-out duration-200"
-          >
-            Mark Resolved
-          </button>
-        )}
-        {issue.status === "resolved" && (
-          <Tooltip content="Issue Resolved">
-            <span className="bg-accent-green dark:bg-green-700 p-[0.2rem] rounded-full text-neutral-50">
-              <MdDone />
-            </span>
-          </Tooltip>
-        )}
       </div>
     </div>
   );

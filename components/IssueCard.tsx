@@ -11,12 +11,12 @@ import {
 } from "@/features/issues/issuesSlice";
 import { deleteIssue, updateIssue } from "@/firebase/issues";
 import { FaUserCog, FaPlus } from "react-icons/fa";
-import { MdDateRange, MdDelete, MdEditDocument } from "react-icons/md";
+import { MdDateRange, MdDelete, MdEditDocument, MdDone } from "react-icons/md";
 import { FaArrowsRotate } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
-import { MdDone } from "react-icons/md";
+import { FiZoomIn } from "react-icons/fi";
 
 import ConfirmationModal from "./ConfirmationModal";
 import EditIssueModal from "./EditIssueModal";
@@ -93,12 +93,25 @@ export default function IssueCard({ issue }: IssueCardProps) {
           />
         </div>
       )}
+      {cardZoomed && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <CardZoomedModal issue={issue} onClose={() => setCardZoomed(false)} />
+        </div>
+      )}
       <div className="md:flex justify-between items-center">
         <h1 className="text-[1.1rem] font-bold dark:text-d-text-primary">
           {issue.title}
         </h1>
         <div className="flex justify-center items-center gap-[1rem]">
           <p className="text-[0.6rem]">{issue.id}</p>
+          <Tooltip content="Zoom in">
+            <button
+              onClick={() => setCardZoomed(true)}
+              className="dark:text-d-text-primary cursor-pointer"
+            >
+              <FiZoomIn />
+            </button>
+          </Tooltip>
           <Tooltip content="Edit Issue">
             <button
               onClick={() => setEditModalOpen(true)}
