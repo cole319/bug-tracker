@@ -32,7 +32,7 @@ export default function DashBoard() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  const { items, loading } = useAppSelector((s: RootState) => s.issues);
+  const { loading } = useAppSelector((s: RootState) => s.issues);
   const filteredIssues = useAppSelector(selectFilteredIssues);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function DashBoard() {
               onClick={() =>
                 dispatch(setFilters({ status: menuItem.value as any }))
               }
-              className="cursor-pointer hover:bg-accent-primary px-[1rem] py-[0.5rem] rounded-lg hover:text-d-text-primary ease-in-out duration-300 active:bg-accent-primary dark:text-d-text-secondary dark:hover:text-accent-primary dark:hover:bg-d-text-primary"
+              className="cursor-pointer hover:bg-accent-primary px-[1rem] py-[0.5rem] rounded-lg hover:text-d-text-primary ease-in-out duration-300 focus:bg-accent-primary focus:text-d-text-primary dark:text-d-text-secondary dark:hover:text-accent-primary dark:hover:bg-d-text-primary"
             >
               {menuItem.name}
             </button>

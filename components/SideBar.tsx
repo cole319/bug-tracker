@@ -37,7 +37,7 @@ export default function SideBar({ onOpenModal }: { onOpenModal: () => void }) {
         {menuItems.map((menuItem) => (
           <button
             key={menuItem.id}
-            className="flex justify-start items-center gap-[1rem] text-[1.1rem] dark:text-d-accent-primary hover:bg-accent-logo/20 active:bg-accent-logo/20 dark:hover:bg-d-accent-logo/20 dark:active:bg-d-accent-logo/20 dark:active:text-neutral-50 w-full py-[0.5rem] px-[1rem] rounded-lg cursor-pointer ease-in-out duration-300"
+            className="flex justify-start items-center gap-[1rem] text-[1.1rem] dark:text-d-accent-primary hover:bg-accent-logo/20 focus:bg-accent-logo/20 dark:hover:bg-d-accent-logo/20 dark:active:bg-d-accent-logo/20 dark:active:text-neutral-50 w-full py-[0.5rem] px-[1rem] rounded-lg cursor-pointer ease-in-out duration-300"
           >
             <span>
               <BsCurrencyDollar />
