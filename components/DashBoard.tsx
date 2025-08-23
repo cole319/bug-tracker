@@ -12,23 +12,20 @@ import { ImSpinner9 } from "react-icons/im";
 
 import { useAppDispatch, useAppSelector } from "@/stores/storeHooks";
 import { subscribeToIssues } from "@/firebase/issues";
-import { setIssues, setLoading } from "@/features/issues/issuesSlice";
+import {
+  setIssues,
+  setLoading,
+  setFilters,
+  selectFilteredIssues,
+} from "@/features/issues/issuesSlice";
 import { RootState } from "@/stores/store";
 import IssueCard from "@/components/IssueCard";
 
 const menuItems = [
-  {
-    id: 1,
-    name: "All",
-  },
-  {
-    id: 2,
-    name: "Open",
-  },
-  {
-    id: 3,
-    name: "In Progress",
-  },
+  { id: 1, name: "All", value: "all" },
+  { id: 2, name: "Open", value: "open" },
+  { id: 3, name: "In Progress", value: "in_progress" },
+  { id: 4, name: "Resolved", value: "resolved" },
 ];
 
 export default function DashBoard() {
@@ -36,6 +33,7 @@ export default function DashBoard() {
 
   const dispatch = useAppDispatch();
   const { items, loading } = useAppSelector((s: RootState) => s.issues);
+  const filteredIssues = useAppSelector(selectFilteredIssues);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -54,6 +52,9 @@ export default function DashBoard() {
           {menuItems.map((menuItem) => (
             <button
               key={menuItem.id}
+              onClick={() =>
+                dispatch(setFilters({ status: menuItem.value as any }))
+              }
               className="cursor-pointer hover:bg-accent-primary px-[1rem] py-[0.5rem] rounded-lg hover:text-d-text-primary ease-in-out duration-300 active:bg-accent-primary dark:text-d-text-secondary dark:hover:text-accent-primary dark:hover:bg-d-text-primary"
             >
               {menuItem.name}
@@ -64,6 +65,7 @@ export default function DashBoard() {
             <input
               type="text"
               placeholder="Search issues..."
+              onChange={(e) => dispatch(setFilters({ search: e.target.value }))}
               className="outline-none dark:placeholder:text-d-accent-primary/50"
             />
             <p className="text-[1.4rem] dark:text-d-accent-primary/70">
@@ -76,6 +78,7 @@ export default function DashBoard() {
             <input
               type="text"
               placeholder="Search issues..."
+              onChange={(e) => dispatch(setFilters({ search: e.target.value }))}
               className="outline-none dark:placeholder:text-d-accent-primary/50 w-full"
             />
             <p className="text-[1.4rem] dark:text-d-accent-primary/70 ">
@@ -105,7 +108,10 @@ export default function DashBoard() {
             {menuItems.map((menuItem) => (
               <button
                 key={menuItem.id}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => {
+                  dispatch(setFilters({ status: menuItem.value as any }));
+                  setMenuOpen(false);
+                }}
                 className="cursor-pointer hover:bg-accent-primary px-[1rem] py-[0.5rem] rounded-lg hover:text-d-text-primary ease-in-out duration-300 active:bg-accent-primary dark:text-d-text-secondary dark:hover:text-accent-primary dark:hover:bg-d-text-primary"
               >
                 {menuItem.name}
@@ -123,7 +129,7 @@ export default function DashBoard() {
               <ImSpinner9 />
             </span>
           </div>
-        ) : items.length === 0 ? (
+        ) : filteredIssues.length === 0 ? (
           <h1 className="pt-[2rem] flex gap-[1rem] justify-center items-center">
             No Issues to display{" "}
             <span className="text-[2rem]">
@@ -132,7 +138,7 @@ export default function DashBoard() {
           </h1>
         ) : (
           <div className="grid gap-4">
-            {items.map((issue) => (
+            {filteredIssues.map((issue) => (
               <IssueCard key={issue.id} issue={issue} />
             ))}
           </div>
