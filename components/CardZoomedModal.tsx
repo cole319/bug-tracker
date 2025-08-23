@@ -1,6 +1,5 @@
 // components/IssueCard.tsx
 "use client";
-import React, { useState } from "react";
 
 import { Tooltip } from "@radix-ui/themes";
 

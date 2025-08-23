@@ -75,20 +75,24 @@ export default function AssignToModal({
       ) : filteredMembers.length === 0 ? (
         <h1 className="text-center pt-[1rem]">No Member to display</h1>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-4 max-h-[60vh] overflow-y-auto">
           {filteredMembers.map((member) => (
             <button
               key={member.uid}
               type="button"
               onClick={() => setSelected(member)}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent-primary/10"
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-accent-primary/10 ${
+                selected?.uid === member.uid && `bg-accent-primary/10`
+              }`}
             >
               <div className="flex flex-col items-start">
                 <p className="font-medium">{member.displayName}</p>
                 <p className="text-sm text-gray-500">{member.email}</p>
               </div>
               {selected?.uid === member.uid && (
-                <span className="text-accent-primary">✔</span>
+                <span className="text-accent-primary dark:text-d-accent-primary">
+                  ✔
+                </span>
               )}
             </button>
           ))}
