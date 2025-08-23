@@ -5,7 +5,6 @@ import { Tooltip } from "@radix-ui/themes";
 
 import { FaUserCog } from "react-icons/fa";
 import { MdDateRange, MdEditDocument } from "react-icons/md";
-
 import { GoDotFill } from "react-icons/go";
 import { IssueWithDoc } from "@/firebase/issues";
 import { getTimeAgo } from "@/utils/time";
