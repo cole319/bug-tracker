@@ -24,7 +24,7 @@ interface IssueUIState {
   search: string;
 
   // new fields
-  scope: "all" | "user" | "team";
+  personalScope: "dashboard" | "my_bugs" | "assigned" | "critical" | "resolved";
   assignedTo?: string; // uid of the assignee
   createdBy?: string; // uid of the creator
 }
@@ -39,7 +39,7 @@ const initialUIState: IssueUIState = {
   status: "all",
   priority: "all",
   search: "",
-  scope: "all",
+  personalScope: "dashboard",
   assignedTo: undefined,
   createdBy: undefined,
 };
@@ -168,37 +168,52 @@ const selectFilters = (state: RootState) => state.issues.filters;
 
 // refined selector
 export const selectFilteredIssues = createSelector(
-  [selectIssues, selectFilters],
-  (issues, filters) => {
+  [selectIssues, selectFilters, (state: RootState) => state.auth.user],
+  (issues, filters, user) => {
+    if (!user) return []; // no user → no issues
+
     return issues.filter((issue) => {
-      // --- scope filtering ---
-      if (filters.scope === "user") {
-        if (
-          filters.assignedTo &&
-          issue.assignedTo?.uid !== filters.assignedTo
-        ) {
-          return false;
-        }
-        if (filters.createdBy && issue.createdBy.uid !== filters.createdBy) {
-          return false;
-        }
+      switch (filters.personalScope) {
+        case "my_bugs":
+          if (issue.createdBy.uid !== user.uid) return false;
+          break;
+
+        case "assigned":
+          if (
+            issue.assignedTo?.uid !== user.uid ||
+            issue.status !== "in_progress"
+          ) {
+            return false;
+          }
+          break;
+
+        case "critical":
+          if (
+            issue.assignedTo?.uid !== user.uid ||
+            issue.status !== "in_progress" ||
+            issue.priority !== "high"
+          ) {
+            return false;
+          }
+          break;
+
+        case "resolved":
+          if (issue.createdBy.uid !== user.uid || issue.status !== "resolved") {
+            return false;
+          }
+          break;
+
+        case "dashboard":
+        default:
+          break;
       }
 
-      // --- status filtering ---
-      if (filters.status && filters.status !== "all") {
-        if (issue.status !== filters.status) {
-          return false;
-        }
-      }
+      // team filters
+      if (filters.status !== "all" && issue.status !== filters.status)
+        return false;
+      if (filters.priority !== "all" && issue.priority !== filters.priority)
+        return false;
 
-      // --- priority filtering ---
-      if (filters.priority && filters.priority !== "all") {
-        if (issue.priority !== filters.priority) {
-          return false;
-        }
-      }
-
-      // --- search filtering ---
       if (filters.search) {
         const search = filters.search.toLowerCase();
         if (
