@@ -10,7 +10,6 @@ import { Issue, IssueWithDoc, resolveIssue } from "@/firebase/issues";
 import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { RootState } from "@/stores/store";
-import { selectFilter } from "@/features/filter/filterSlice";
 import { TeamMember } from "../team/teamSlice";
 
 // interface IssuesState {

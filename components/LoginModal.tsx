@@ -66,7 +66,7 @@ export default function AuthModal() {
         Sign in with Google
       </button>
       <p className="pt-[1rem]">
-        New Xterminator?{" "}
+        New User?{" "}
         <span className="text-accent-logo font-medium hover:underline">
           <Link href="register">click here to register</Link>
         </span>
