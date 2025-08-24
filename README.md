@@ -237,5 +237,4 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 
 > **Warning**
 > **MVP Status:** This project is currently in its Minimum Viable Product (MVP) stage. It is functional but subject to significant changes, refactors, and breaking updates. It is not yet recommended for production use. Feedback and contributions are highly welcome!
-```
 
